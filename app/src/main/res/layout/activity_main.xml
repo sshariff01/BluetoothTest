@@ -13,9 +13,17 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get Started!"
-        android:id="@+id/getStartedButton"
+        android:text="Enable BlueTooth"
+        android:id="@+id/enableBT"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="107dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Discovery"
+        android:id="@+id/startDiscovery"
+        android:layout_below="@+id/enableBT"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
