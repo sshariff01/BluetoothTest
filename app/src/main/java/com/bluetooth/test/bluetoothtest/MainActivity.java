@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListPopupWindow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,28 @@ public class MainActivity extends Activity {
         startDiscoveryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                new DiscoveryTask().execute();
+                if (mBluetoothAdapter.isEnabled()) {
+                    DiscoveryTask discoveryTask = new DiscoveryTask();
+                    discoveryTask.execute();
+
+                    boolean discoveryTaskFinished = false;
+//                    while (!discoveryTaskFinished) {
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        if (discoveryTask.getStatus() == DiscoveryTask.Status.FINISHED) {
+//                            // My AsyncTask is done and onPostExecute was called
+//                            discoveryTaskFinished = true;
+//                            Log.i("BT_TEST: DISCOVERYTASK ", "DiscoveryTask Finished and onPostExecute was called");
+//                        }
+//                    }
+
+                } else {
+                    Log.i("BT_TEST", "Bluetooth is not enabled!");
+                }
 
             }
         });
@@ -118,7 +140,7 @@ public class MainActivity extends Activity {
                 boolean isDiscovering = mBluetoothAdapter.startDiscovery();
                 while (isDiscovering) {
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(2500);
                         isDiscovering = mBluetoothAdapter.isDiscovering();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -140,6 +162,14 @@ public class MainActivity extends Activity {
             super.onPostExecute(unusedVoid);
 
             mBluetoothAdapter.cancelDiscovery();
+
+            ListPopupWindow lpw = new ListPopupWindow(MainActivity.this);
+//            lpw.setOnItemClickListener(MainActivity.this);
+            lpw.setHeight(200); lpw.setWidth(200);
+            lpw.setModal(true);
+            lpw.show();
+
+
         }
     }
 }
