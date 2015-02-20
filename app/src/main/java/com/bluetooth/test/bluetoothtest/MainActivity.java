@@ -76,20 +76,12 @@ public class MainActivity extends Activity {
                     DiscoveryTask discoveryTask = new DiscoveryTask();
                     discoveryTask.execute();
 
-                    boolean discoveryTaskFinished = false;
-//                    while (!discoveryTaskFinished) {
-//                        try {
-//                            Thread.sleep(1000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        if (discoveryTask.getStatus() == DiscoveryTask.Status.FINISHED) {
-//                            // My AsyncTask is done and onPostExecute was called
-//                            discoveryTaskFinished = true;
-//                            Log.i("BT_TEST: DISCOVERYTASK ", "DiscoveryTask Finished and onPostExecute was called");
-//                        }
-//                    }
+                    ListPopupWindow lpw = new ListPopupWindow(MainActivity.this, null);
+//                    lpw.setOnItemClickListener(MainActivity.this);
+                    lpw.setHeight(200); lpw.setWidth(200);
+                    lpw.setModal(true);
+                    lpw.show();
+
 
                 } else {
                     Log.i("BT_TEST", "Bluetooth is not enabled!");
@@ -162,14 +154,6 @@ public class MainActivity extends Activity {
             super.onPostExecute(unusedVoid);
 
             mBluetoothAdapter.cancelDiscovery();
-
-            ListPopupWindow lpw = new ListPopupWindow(MainActivity.this);
-//            lpw.setOnItemClickListener(MainActivity.this);
-            lpw.setHeight(200); lpw.setWidth(200);
-            lpw.setModal(true);
-            lpw.show();
-
-
         }
     }
 }
