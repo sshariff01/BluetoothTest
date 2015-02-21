@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
@@ -39,9 +42,9 @@ public class MainActivity extends Activity implements OnClickListener {
                 // Add the name and address to an array adapter to show in a ListView
                 Log.i ("BT_TEST: DEVICE FOUND", "DEVICE NAME: " + device.getName());
                 Log.i ("BT_TEST: DEVICE FOUND", "DEVICE ADDRESS: " + device.getAddress());
-                discoveredDevices.add(device.getName() + "\n" + device.getAddress());
-
-                //mArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                if (!discoveredDevices.contains(device.getName() + "\n" + device.getAddress())) {
+                    discoveredDevices.add(device.getName() + "\n" + device.getAddress());
+                }
             }
         }
     };
@@ -75,8 +78,6 @@ public class MainActivity extends Activity implements OnClickListener {
                 }
             }
         });
-
-        final Button startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
     }
 
     protected void init() {
@@ -85,11 +86,20 @@ public class MainActivity extends Activity implements OnClickListener {
 
     public void popupInit() {
         startDiscoveryButton.setOnClickListener(this);
-        popupMessage = new ListPopupWindow(this, null);
+        popupMessage = new ListPopupWindow(this);
+        popupMessage.setAdapter(new ArrayAdapter(this, R.layout.device_list_item, discoveredDevices));
         popupMessage.setAnchorView(findViewById(R.id.frameLayout));
         popupMessage.setHeight(1000);
         popupMessage.setWidth(ListPopupWindow.WRAP_CONTENT);
         popupMessage.setVerticalOffset(-80);
+        popupMessage.setModal(true);
+        popupMessage.setOnItemClickListener( new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                // TODO: CONNECT TO DEVICE HERE!
+            }
+        });
+
+
     }
 
 
@@ -98,10 +108,9 @@ public class MainActivity extends Activity implements OnClickListener {
             /*
              * START DISCOVERY
              */
+            popupMessage.show();
             if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
-                popupMessage.show();
-                DiscoveryTask discoveryTask = new DiscoveryTask();
-                discoveryTask.execute();
+                new DiscoveryTask().execute();
             } else {
                 if (mBluetoothAdapter.isDiscovering()) {
                     Log.i("BT_TEST", "Bluetooth is already discovering!");
@@ -137,8 +146,6 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private class DiscoveryTask extends AsyncTask<Void, Void, Void> {
-//        private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
