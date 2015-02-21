@@ -13,14 +13,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener {
     private final static int REQUEST_ENABLE_BT = 1;
     private List<String> discoveredDevices = new ArrayList<String>();
     protected final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -43,10 +46,18 @@ public class MainActivity extends Activity {
         }
     };
 
+    LinearLayout layoutOfPopup;
+    TextView popupText;
+    Button startDiscoveryButton;
+    Button insidePopupButton;
+    ListPopupWindow popupMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
+        popupInit();
 
         /*
          * ENABLE BLUETOOTH
@@ -65,32 +76,43 @@ public class MainActivity extends Activity {
             }
         });
 
-        /*
-         * START DISCOVERY
-         */
         final Button startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
-        startDiscoveryButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                if (mBluetoothAdapter.isEnabled()) {
-                    DiscoveryTask discoveryTask = new DiscoveryTask();
-                    discoveryTask.execute();
-
-                    ListPopupWindow lpw = new ListPopupWindow(MainActivity.this, null);
-//                    lpw.setOnItemClickListener(MainActivity.this);
-                    lpw.setHeight(200); lpw.setWidth(200);
-                    lpw.setModal(true);
-                    lpw.show();
-
-
-                } else {
-                    Log.i("BT_TEST", "Bluetooth is not enabled!");
-                }
-
-            }
-        });
     }
 
+    protected void init() {
+        startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
+    }
+
+    public void popupInit() {
+        startDiscoveryButton.setOnClickListener(this);
+        popupMessage = new ListPopupWindow(this, null);
+        popupMessage.setAnchorView(findViewById(R.id.frameLayout));
+        popupMessage.setHeight(1000);
+        popupMessage.setWidth(ListPopupWindow.WRAP_CONTENT);
+        popupMessage.setVerticalOffset(-80);
+    }
+
+
+    public void onClick(View v) {
+        if (v.getId() == R.id.startDiscovery) {
+            /*
+             * START DISCOVERY
+             */
+            if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
+                popupMessage.show();
+                DiscoveryTask discoveryTask = new DiscoveryTask();
+                discoveryTask.execute();
+            } else {
+                if (mBluetoothAdapter.isDiscovering()) {
+                    Log.i("BT_TEST", "Bluetooth is already discovering!");
+                } else if (!mBluetoothAdapter.isEnabled()) {
+                    Log.i("BT_TEST", "Bluetooth is not enabled!");
+                }
+            }
+        } else {
+            popupMessage.dismiss();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
