@@ -53,7 +53,7 @@ public class MainActivity extends Activity implements OnClickListener {
     TextView popupText;
     Button startDiscoveryButton;
     Button insidePopupButton;
-    ListPopupWindow popupMessage;
+    ListPopupWindow listPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +86,14 @@ public class MainActivity extends Activity implements OnClickListener {
 
     public void popupInit() {
         startDiscoveryButton.setOnClickListener(this);
-        popupMessage = new ListPopupWindow(this);
-        popupMessage.setAdapter(new ArrayAdapter(this, R.layout.device_list_item, discoveredDevices));
-        popupMessage.setAnchorView(findViewById(R.id.frameLayout));
-        popupMessage.setHeight(1000);
-        popupMessage.setWidth(ListPopupWindow.WRAP_CONTENT);
-        popupMessage.setVerticalOffset(-80);
-        popupMessage.setModal(true);
-        popupMessage.setOnItemClickListener( new OnItemClickListener() {
+        listPopupWindow = new ListPopupWindow(this);
+        listPopupWindow.setAdapter(new ArrayAdapter(this, R.layout.device_list_item, discoveredDevices));
+        listPopupWindow.setAnchorView(findViewById(R.id.frameLayout));
+        listPopupWindow.setHeight(1000);
+        listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
+        listPopupWindow.setVerticalOffset(-80);
+        listPopupWindow.setModal(true);
+        listPopupWindow.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // TODO: CONNECT TO DEVICE HERE!
             }
@@ -108,7 +108,7 @@ public class MainActivity extends Activity implements OnClickListener {
             /*
              * START DISCOVERY
              */
-            popupMessage.show();
+            listPopupWindow.show();
             if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
                 new DiscoveryTask().execute();
             } else {
@@ -119,7 +119,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 }
             }
         } else {
-            popupMessage.dismiss();
+            listPopupWindow.dismiss();
         }
     }
 
