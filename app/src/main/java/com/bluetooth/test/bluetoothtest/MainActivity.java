@@ -42,8 +42,8 @@ public class MainActivity extends Activity implements OnClickListener {
     private List<String> discoveredDevices = new ArrayList<String>();
 
     protected final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    protected BluetoothSocket btSocket = null;
-    protected ConnectedThread mConnectedThread = null;
+    protected BluetoothSocket btSocket;
+    protected ConnectedThread mConnectedThread;
 
     protected Handler mHandler;
     private static final int RECEIVE_MESSAGE = 1;
@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private static boolean SOCKET_INSTREAM_ACTIVE = false, SOCKET_CONNECTED = false;
 
-    private static final UUID MY_UUID = UUID.fromString("dd6d60a0-09b3-48c7-a37f-f916b1f936ec");
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -111,11 +111,12 @@ public class MainActivity extends Activity implements OnClickListener {
                         String readMessage = new String(readBuf, 0, msg.arg1);
 
                         // Send to text file for now sdcard/debug/myData.txt
-                        if (isExternalStorageWritable()) {
-                            writeToSD(readMessage);
-                        }
+//                        if (isExternalStorageWritable()) {
+//                            writeToSD(readMessage);
+//                        }
                         sb.append(readMessage);
                         int endOfLineIndex = sb.indexOf("~");
+                        text.setText("Value from BT module: " + readMessage);
                         if (endOfLineIndex > 0) {
                             if (sb.charAt(0) == '#') {
                                 String value = sb.substring(0, endOfLineIndex);
