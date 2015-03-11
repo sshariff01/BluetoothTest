@@ -46,6 +46,13 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center" />
 
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:text="Please wait..."
+            android:textSize="14sp" />
+
 
     </FrameLayout>
 
