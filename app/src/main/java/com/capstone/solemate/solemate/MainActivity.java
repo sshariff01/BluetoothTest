@@ -176,6 +176,20 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.startDiscovery) {
             /*
+             * ENABLE BLUETOOTH ADAPTER
+             */
+
+            // Perform action on click
+            if (mBluetoothAdapter == null) {
+                Log.i ("BT_TEST_DEBUG", "Device does not support Bluetooth");
+            } else if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+
+            if (!mBluetoothAdapter.isEnabled()) return;
+
+            /*
              * START DISCOVERY
              */
             listPopupWindow.show();
