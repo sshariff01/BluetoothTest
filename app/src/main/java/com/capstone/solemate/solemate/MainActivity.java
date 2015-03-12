@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
         /*
          * ENABLE BLUETOOTH
-         */
+
         final Button enableBTButton = (Button) findViewById(R.id.enableBT);
         enableBTButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -103,6 +103,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 }
             }
         });
+        */
 
         final TextView text = (TextView) findViewById(R.id.text);
 
@@ -183,25 +184,26 @@ public class MainActivity extends Activity implements OnClickListener {
             if (mBluetoothAdapter == null) {
                 Log.i ("BT_TEST_DEBUG", "Device does not support Bluetooth");
             } else if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-
-            if (!mBluetoothAdapter.isEnabled()) return;
-
-            /*
-             * START DISCOVERY
-             */
-            listPopupWindow.show();
-            if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
-                new DiscoveryTask().execute();
+                /*
+                 * Begin AsyncTask to enable BT
+                 */
+                new EnableBtTask().execute();
             } else {
-                if (mBluetoothAdapter.isDiscovering()) {
-                    Log.i("BT_TEST", "Bluetooth is already discovering!");
-                } else if (!mBluetoothAdapter.isEnabled()) {
-                    Log.i("BT_TEST", "Bluetooth is not enabled!");
+                /*
+                 * Begin AsyncTask to start discovery
+                 */
+                if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
+                    new DiscoveryTask().execute();
+                } else {
+                    if (mBluetoothAdapter.isDiscovering()) {
+                        listPopupWindow.show();
+                        Log.i("BT_TEST", "Bluetooth is already discovering!");
+                    } else if (!mBluetoothAdapter.isEnabled()) {
+                        Log.i("BT_TEST", "Bluetooth is not enabled!");
+                    }
                 }
             }
+
         } else {
             listPopupWindow.dismiss();
         }
@@ -260,6 +262,54 @@ public class MainActivity extends Activity implements OnClickListener {
     /*
      * ASYNC TASKS AND OTHER THREADS
      */
+    private class EnableBtTask extends AsyncTask<Void, Void, Void> {
+        protected boolean START_DISCOVERY = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... unusedVoids) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            int count = 0;
+            while (!START_DISCOVERY && count < 3) {
+                if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
+                    START_DISCOVERY = true;
+                } else {
+                    if (!mBluetoothAdapter.isEnabled()) {
+                        Log.i("BT_TEST", "Bluetooth is not yet enabled...");
+                    }
+
+                    // Put this thread to sleep for 0.5s
+                    try {
+                        Thread.sleep(3000);
+                        Log.i("BT_TEST", "EnableBtTask sleeping for 3000ms...");
+                        count++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unusedVoid) {
+            super.onPostExecute(unusedVoid);
+
+            if (START_DISCOVERY && !mBluetoothAdapter.isDiscovering()) {
+                new DiscoveryTask().execute();
+            }
+
+        }
+    }
+
     private class DiscoveryTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -268,6 +318,8 @@ public class MainActivity extends Activity implements OnClickListener {
             // Register the BroadcastReceiver
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+
+            listPopupWindow.show();
         }
 
         @Override
