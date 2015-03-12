@@ -45,7 +45,8 @@ public class MainActivity extends Activity implements OnClickListener {
     private Handler mHandler;
     private static final int RECEIVE_MESSAGE = 1;
     private StringBuffer sb = new StringBuffer();
-    private static boolean SOCKET_INSTREAM_ACTIVE = false, SOCKET_CONNECTED = false;
+    private static boolean SOCKET_INSTREAM_ACTIVE = false;
+    private static boolean SOCKET_CONNECTED = false;
 
     private static boolean WRITE_ENABLE_OPTION = true;
     private static final String OUTPUT_FILE_NAME = "testBTData.txt";
