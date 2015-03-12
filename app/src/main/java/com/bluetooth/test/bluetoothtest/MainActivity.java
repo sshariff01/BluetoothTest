@@ -39,19 +39,24 @@ import java.util.UUID;
 
 public class MainActivity extends Activity implements OnClickListener {
     private final static int REQUEST_ENABLE_BT = 1;
+
+    // List to pass to list view array adapter
     private List<String> discoveredDevices = new ArrayList<String>();
 
-    protected final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    protected BluetoothSocket btSocket;
-    protected ConnectedThread mConnectedThread;
-
-    protected Handler mHandler;
+    private ConnectedThread mConnectedThread;
+    private Handler mHandler;
     private static final int RECEIVE_MESSAGE = 1;
-    private StringBuilder sb = new StringBuilder();
-
+    private StringBuffer sb = new StringBuffer();
     private static boolean SOCKET_INSTREAM_ACTIVE = false, SOCKET_CONNECTED = false;
 
+    // BT device connection attributes
+    private BluetoothSocket btSocket;
+    private static BluetoothDevice btDevice;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private static String hc05MacId = new String();
+
+    // Init default bluetooth adapter
+    private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -110,24 +115,30 @@ public class MainActivity extends Activity implements OnClickListener {
                         byte[] readBuf = (byte[]) msg.obj;
                         String readMessage = new String(readBuf, 0, msg.arg1);
 
-                        // Send to text file for now sdcard/debug/myData.txt
-//                        if (isExternalStorageWritable()) {
-//                            writeToSD(readMessage);
-//                        }
+                        // Send to text file for now sdcard/debug/testBTData.txt
+                        if (isExternalStorageWritable()) writeToSD(readMessage);
+
                         sb.append(readMessage);
-                        int endOfLineIndex = sb.indexOf("~");
-                        text.setText("Value from BT module: " + readMessage);
-                        if (endOfLineIndex > 0) {
-                            if (sb.charAt(0) == '#') {
-                                String value = sb.substring(0, endOfLineIndex);
+
+                        try {
+                            int startIndex = sb.indexOf("Analog1 reading =") + "Analog1 reading =".length() + 1;
+                            int endIndex = sb.substring(startIndex).indexOf("\n");
+                            if (startIndex > 0 & endIndex > 0) {
+                                String value = sb.substring(startIndex, startIndex + endIndex);
+
                                 text.setText("Value from BT module: " + value);
                             }
+                        } catch (StringIndexOutOfBoundsException e) {
+                            Log.i("BT_TEST: FATAL EXCEPTION", sb.toString());
+                            e.printStackTrace();
+
                         }
+
                         sb.delete(0, sb.length());
                         break;
                 }
+            };
         };
-    };
     }
 
     private boolean isExternalStorageWritable() {
@@ -138,7 +149,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void writeToSD(String readMessage) {
         File root = android.os.Environment.getExternalStorageDirectory();
-        File dir = new File (root.getAbsolutePath() + "/debug_bt");
+        File dir = new File (root.getAbsolutePath() + "/debug");
         dir.mkdirs();
         File file = new File(dir, "testBTData.txt");
 
@@ -152,7 +163,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 
         } catch (IOException ioe) {
+            Log.i("FATAL ERROR: FNF EXCEPTION", "IOException");
             ioe.printStackTrace();
+
         }
 
     }
@@ -175,44 +188,24 @@ public class MainActivity extends Activity implements OnClickListener {
                 // TODO: CONNECT TO DEVICE HERE!
 //                listPopupWindow.getSelectedItem().
                 // MAC ID for HC-05 module: 98:D3:31:40:20:D9
-                String macId = "98:D3:31:40:20:D9";
+                hc05MacId = "98:D3:31:40:20:D9";
                 if (mBluetoothAdapter == null) {
                     Log.i("BT_TEST: FATAL ERROR", "Bluetooth adapter is null!");
                 } else {
                     if (!mBluetoothAdapter.isEnabled()) {
                         Log.i("BT_TEST", "Bluetooth is not enabled!");
                     } else {
-                        // Initialize the remote device's address
-                        BluetoothDevice btDevice = mBluetoothAdapter.getRemoteDevice(macId);
+                        // Connect to BT in async task thread
+                        new ConnectToBtTask().execute();
 
-                        // Create/initialize socket
-                        try {
-                            btSocket = btDevice.createInsecureRfcommSocketToServiceRecord(MY_UUID);
-                        } catch (IOException ioe) {
-                            Log.i("BT_TEST: FATAL ERROR", "Failed to create socket");
-                        }
+//                        // Cancel/stop device discovery
+//                        mBluetoothAdapter.cancelDiscovery();
 
-                        // Cancel/stop device discovery
-                        mBluetoothAdapter.cancelDiscovery();
+//                        // Create data stream to talk to device
+//                        mConnectedThread = new ConnectedThread(btSocket);
+//                        mConnectedThread.start();
 
-                        // Connect to remote device
-                        try {
-                            btSocket.connect();
-                            SOCKET_CONNECTED = true;
-                        } catch (IOException ioe) {
-                            Log.i("BT_TEST: FATAL ERROR", "Failed to connect to socket");
-                            ioe.printStackTrace();
-                            try {
-                                btSocket.close();
-                            } catch (IOException ioe2) {
-                                Log.i("BT_TEST: FATAL ERROR", "Failed to close socket");
-                                ioe2.printStackTrace();
-                            }
-                        }
 
-                        // Create data stream to talk to device
-                        mConnectedThread = new ConnectedThread(btSocket);
-                        mConnectedThread.start();
                     }
                 }
             }
@@ -301,6 +294,58 @@ public class MainActivity extends Activity implements OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
+    private class ConnectToBtTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // Close discovery
+            if (mBluetoothAdapter.isDiscovering()) mBluetoothAdapter.cancelDiscovery();
+
+            // Initialize the remote device's address
+            if (!hc05MacId.isEmpty()) btDevice = mBluetoothAdapter.getRemoteDevice(hc05MacId);
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... unusedVoids) {
+            // Create socket
+            try {
+                btSocket = btDevice.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException ioe) {
+                Log.i("BT_TEST: FATAL ERROR", "Failed to create socket");
+                ioe.printStackTrace();
+            }
+
+            // Connect to remote device
+            try {
+                btSocket.connect();
+                SOCKET_CONNECTED = true;
+            } catch (IOException ioe) {
+                Log.i("BT_TEST: FATAL ERROR", "Failed to connect to socket");
+                ioe.printStackTrace();
+                try {
+                    btSocket.close();
+                } catch (IOException ioe2) {
+                    Log.i("BT_TEST: FATAL ERROR", "Failed to close socket");
+                    ioe2.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unusedVoid) {
+            super.onPostExecute(unusedVoid);
+
+            // Create data stream to talk to device
+            mConnectedThread = new ConnectedThread(btSocket);
+            mConnectedThread.start();
+
+        }
+    }
+
     private class DiscoveryTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -328,11 +373,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
             return null;
         }
-
-//        @Override
-//        protected void onProgressUpdate(Void... values) {
-//            super.onProgressUpdate(values);
-//        }
 
         @Override
         protected void onPostExecute(Void unusedVoid) {
