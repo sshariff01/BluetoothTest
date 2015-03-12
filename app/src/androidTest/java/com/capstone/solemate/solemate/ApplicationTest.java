@@ -1,4 +1,4 @@
-package com.bluetooth.test.bluetoothtest;
+package com.capstone.solemate.solemate;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
