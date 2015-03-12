@@ -1,4 +1,4 @@
-package com.bluetooth.test.bluetoothtest;
+package com.capstone.solemate.solemate;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -24,6 +24,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
+
+import com.bluetooth.test.bluetoothtest.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
