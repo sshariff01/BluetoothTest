@@ -25,8 +25,6 @@ import android.widget.Button;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
-import com.bluetooth.test.bluetoothtest.R;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
