@@ -82,8 +82,8 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     };
 
-    Button startDiscoveryButton;
-    ListPopupWindow listPopupWindow;
+    public Button startDiscoveryButton;
+    public ListPopupWindow listPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +91,6 @@ public class MainActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_main);
         initDiscoveryButton();
         initPopup();
-
-
 
         final TextView text = (TextView) findViewById(R.id.text);
 
@@ -104,7 +102,7 @@ public class MainActivity extends Activity implements OnClickListener {
                         String readMessage = new String(readBuf, 0, msg.arg1);
 
                         // Send to text file for now sdcard/debug/testBTData.txt
-                        if (isExternalStorageWritable()) writeToSD(readMessage);
+//                        if (isExternalStorageWritable()) writeToSD(readMessage);
 
                         sb.append(readMessage);
 
@@ -147,9 +145,11 @@ public class MainActivity extends Activity implements OnClickListener {
         listPopupWindow.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // TODO: CONNECT TO DEVICE HERE!
-//                listPopupWindow.getSelectedItem().
+                TextView selectedItemView = (TextView) arg1;
+                String selectedItemStr = selectedItemView.getText().toString();
+                hc05MacId = selectedItemStr.substring(selectedItemStr.indexOf("\n") + "\n".length());
                 // MAC ID for HC-05 module: 98:D3:31:40:20:D9
-                hc05MacId = "98:D3:31:40:20:D9";
+//                hc05MacId = "98:D3:31:40:20:D9";
                 if (mBluetoothAdapter == null) {
                     Log.i("BT_TEST: FATAL ERROR", "Bluetooth adapter is null!");
                 } else {
@@ -386,6 +386,9 @@ public class MainActivity extends Activity implements OnClickListener {
             // Create data stream to talk to device
             mConnectedThread = new ConnectedThread(btSocket);
             mConnectedThread.start();
+
+            Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
+            MainActivity.this.startActivity(myIntent);
         }
     }
 
