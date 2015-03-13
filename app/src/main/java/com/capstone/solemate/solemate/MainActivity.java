@@ -36,7 +36,8 @@ public class MainActivity extends Activity implements OnClickListener {
     private final static int REQUEST_ENABLE_BT = 1;
 
     // List to pass to list view array adapter
-    private List<String> discoveredDevices = new ArrayList<String>();
+    private static List<String> discoveredDevices = new ArrayList<String>();
+    private static ArrayAdapter arrayAdapter;
 
     private static boolean WRITE_ENABLE_OPTION = true;
     private static final String OUTPUT_FILE_NAME = "testBTData.txt";
@@ -62,6 +63,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 Log.i ("BT_TEST: DEVICE FOUND", "DEVICE ADDRESS: " + device.getAddress());
                 if (!discoveredDevices.contains(device.getName() + "\n" + device.getAddress())) {
                     discoveredDevices.add(device.getName() + "\n" + device.getAddress());
+                    arrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
             }
         }
@@ -81,11 +83,15 @@ public class MainActivity extends Activity implements OnClickListener {
     protected void initDiscoveryButton() {
         startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
         startDiscoveryButton.setOnClickListener(this);
+
+        arrayAdapter = new ArrayAdapter(this, R.layout.device_list_item);
     }
 
     public void initPopup() {
         listPopupWindow = new ListPopupWindow(this);
-        listPopupWindow.setAdapter(new ArrayAdapter(this, R.layout.device_list_item, discoveredDevices));
+
+        listPopupWindow.setAdapter(arrayAdapter);
+        arrayAdapter.setNotifyOnChange(true);
         listPopupWindow.setAnchorView(findViewById(R.id.frameLayout));
         display = getWindowManager().getDefaultDisplay();
         display.getSize(size);
