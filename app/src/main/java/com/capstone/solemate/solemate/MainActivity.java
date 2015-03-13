@@ -76,20 +76,19 @@ public class MainActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initDiscoveryButton();
-        initPopup();
+        init();
     }
 
-    protected void initDiscoveryButton() {
+    protected void init() {
+        // Init discovery button
         startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
         startDiscoveryButton.setOnClickListener(this);
 
+        // Init array adapter
         arrayAdapter = new ArrayAdapter(this, R.layout.device_list_item);
-    }
 
-    public void initPopup() {
+        // Init listpopupwindow
         listPopupWindow = new ListPopupWindow(this);
-
         listPopupWindow.setAdapter(arrayAdapter);
         arrayAdapter.setNotifyOnChange(true);
         listPopupWindow.setAnchorView(findViewById(R.id.frameLayout));
@@ -123,7 +122,6 @@ public class MainActivity extends Activity implements OnClickListener {
                 }
             }
         });
-
     }
 
     public void onClick(View v) {
