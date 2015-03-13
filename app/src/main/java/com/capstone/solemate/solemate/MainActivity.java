@@ -8,12 +8,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +58,8 @@ public class MainActivity extends Activity implements OnClickListener {
     private static BluetoothDevice btDevice;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static String hc05MacId = new String();
+    private static Point size = new Point();
+    private static Display display;
 
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -88,22 +92,7 @@ public class MainActivity extends Activity implements OnClickListener {
         initDiscoveryButton();
         initPopup();
 
-        /*
-         * ENABLE BLUETOOTH
 
-        final Button enableBTButton = (Button) findViewById(R.id.enableBT);
-        enableBTButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                if (mBluetoothAdapter == null) {
-                    Log.i ("BT_TEST_DEBUG", "Device does not support Bluetooth");
-                } else if (!mBluetoothAdapter.isEnabled()) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                }
-            }
-        });
-        */
 
         final TextView text = (TextView) findViewById(R.id.text);
 
@@ -149,7 +138,9 @@ public class MainActivity extends Activity implements OnClickListener {
         listPopupWindow = new ListPopupWindow(this);
         listPopupWindow.setAdapter(new ArrayAdapter(this, R.layout.device_list_item, discoveredDevices));
         listPopupWindow.setAnchorView(findViewById(R.id.frameLayout));
-        listPopupWindow.setHeight(1000);
+        display = getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        listPopupWindow.setHeight(size.y-400);
         listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
         listPopupWindow.setVerticalOffset(-80);
         listPopupWindow.setModal(true);
