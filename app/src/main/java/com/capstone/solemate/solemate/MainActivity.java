@@ -50,7 +50,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
     // Loading spinner
     public ProgressDialog progress;
-    private static boolean SHOW_PROGRESS = false;
 
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -62,9 +61,6 @@ public class MainActivity extends Activity implements OnClickListener {
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            SHOW_PROGRESS = true;
-//            progress.show();
-//            listPopupWindow.show();
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
@@ -77,8 +73,6 @@ public class MainActivity extends Activity implements OnClickListener {
                     arrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
             }
-
-//            progress.dismiss();
         }
     };
 
@@ -90,9 +84,25 @@ public class MainActivity extends Activity implements OnClickListener {
         init();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Cancel bluetooth discovery
+        mBluetoothAdapter.cancelDiscovery();
+    }
+
+    @Override
     protected void onDestroy() {
+        super.onDestroy();
         // Unregister receiver
         unregisterReceiver(mReceiver);
+
+        // Clear list and adapter
+        discoveredDevices.clear();
+        arrayAdapter.clear();
+
+        // Make sure bluetooth is not discovering
+        mBluetoothAdapter.cancelDiscovery();
     }
 
     protected void init() {
@@ -168,12 +178,13 @@ public class MainActivity extends Activity implements OnClickListener {
                  * Begin AsyncTask to start discovery
                  */
                 if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
-                    new DiscoveryTask().execute();
-
+                    if (arrayAdapter.isEmpty()) new DiscoveryTask().execute();
+                    else listPopupWindow.show();
 
                 } else {
                     if (mBluetoothAdapter.isDiscovering()) {
                         listPopupWindow.show();
+                        progress.show();
                         Log.i("BT_TEST", "Bluetooth is already discovering!");
                     } else if (!mBluetoothAdapter.isEnabled()) {
                         Log.i("BT_TEST", "Bluetooth is not enabled!");
@@ -246,8 +257,6 @@ public class MainActivity extends Activity implements OnClickListener {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-
         }
 
         @Override
