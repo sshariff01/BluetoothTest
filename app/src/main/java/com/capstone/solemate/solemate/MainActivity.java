@@ -1,6 +1,7 @@
 package com.capstone.solemate.solemate;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -47,13 +48,23 @@ public class MainActivity extends Activity implements OnClickListener {
     private static Point size = new Point();
     private static Display display;
 
+    // Loading spinner
+    public ProgressDialog progress;
+    private static boolean SHOW_PROGRESS = false;
+
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    public Button startDiscoveryButton;
+    public ListPopupWindow listPopupWindow;
 
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            SHOW_PROGRESS = true;
+//            progress.show();
+//            listPopupWindow.show();
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Get the BluetoothDevice object from the Intent
@@ -66,11 +77,11 @@ public class MainActivity extends Activity implements OnClickListener {
                     arrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
             }
+
+//            progress.dismiss();
         }
     };
 
-    public Button startDiscoveryButton;
-    public ListPopupWindow listPopupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +138,15 @@ public class MainActivity extends Activity implements OnClickListener {
                 }
             }
         });
+
+        // Init loading spinner
+        progress = new ProgressDialog(this);
+        progress.setTitle("Loading");
+        progress.setMessage("Wait while loading...");
+
+//        progress.show();
+//        ShowProgressSpinner showProgressSpinner = new ShowProgressSpinner();
+//        showProgressSpinner.start();
     }
 
     public void onClick(View v) {
@@ -149,6 +169,8 @@ public class MainActivity extends Activity implements OnClickListener {
                  */
                 if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
                     new DiscoveryTask().execute();
+
+
                 } else {
                     if (mBluetoothAdapter.isDiscovering()) {
                         listPopupWindow.show();
@@ -160,6 +182,7 @@ public class MainActivity extends Activity implements OnClickListener {
             }
 
         } else {
+            progress.dismiss();
             listPopupWindow.dismiss();
         }
     }
@@ -275,6 +298,7 @@ public class MainActivity extends Activity implements OnClickListener {
             registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 
             listPopupWindow.show();
+            progress.show();
         }
 
         @Override
@@ -282,13 +306,7 @@ public class MainActivity extends Activity implements OnClickListener {
             if (mBluetoothAdapter.isEnabled()) {
                 boolean isDiscovering = mBluetoothAdapter.startDiscovery();
                 while (isDiscovering) {
-                    try {
-                        Thread.sleep(2500);
-                        isDiscovering = mBluetoothAdapter.isDiscovering();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
+                    isDiscovering = mBluetoothAdapter.isDiscovering();
                 }
             }
 
@@ -301,6 +319,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
             // Cancel discovery
             mBluetoothAdapter.cancelDiscovery();
+
+            if (!mBluetoothAdapter.isDiscovering()) progress.dismiss();
         }
     }
 
