@@ -12,7 +12,6 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -32,7 +31,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -41,20 +39,10 @@ public class MainActivity extends Activity implements OnClickListener {
     // List to pass to list view array adapter
     private List<String> discoveredDevices = new ArrayList<String>();
 
-//    private ConnectedThread mConnectedThread;
-    private Handler mHandler;
-    private static final int RECEIVE_MESSAGE = 1;
-    private StringBuffer sb = new StringBuffer();
-    private static boolean SOCKET_INSTREAM_ACTIVE = false;
-    private static boolean SOCKET_CONNECTED = false;
-
     private static boolean WRITE_ENABLE_OPTION = true;
     private static final String OUTPUT_FILE_NAME = "testBTData.txt";
 
     // BT device connection attributes
-    private BluetoothSocket btSocket;
-    private static BluetoothDevice btDevice;
-    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static String hc05MacId = new String();
     private static Point size = new Point();
     private static Display display;
@@ -89,40 +77,6 @@ public class MainActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_main);
         initDiscoveryButton();
         initPopup();
-
-        final TextView text = (TextView) findViewById(R.id.text);
-
-//        mHandler = new Handler() {
-//            public void handleMessage(Message msg) {
-//                switch (msg.what) {
-//                    case RECEIVE_MESSAGE:
-//                        byte[] readBuf = (byte[]) msg.obj;
-//                        String readMessage = new String(readBuf, 0, msg.arg1);
-//
-//                        // Send to text file for now sdcard/debug/testBTData.txt
-////                        if (isExternalStorageWritable()) writeToSD(readMessage);
-//
-//                        sb.append(readMessage);
-//
-//                        try {
-//                            int startIndex = sb.indexOf("Analog1 reading =") + "Analog1 reading =".length() + 1;
-//                            int endIndex = sb.substring(startIndex).indexOf("\n");
-//                            if (startIndex > 0 & endIndex > 0) {
-//                                String value = sb.substring(startIndex, startIndex + endIndex);
-//
-//                                text.setText("Value from BT module: " + value);
-//                            }
-//                        } catch (StringIndexOutOfBoundsException e) {
-//                            Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
-//                            e.printStackTrace();
-//
-//                        }
-//
-//                        sb.delete(0, sb.length());
-//                        break;
-//                }
-//            };
-//        };
     }
 
     protected void initDiscoveryButton() {
@@ -142,12 +96,12 @@ public class MainActivity extends Activity implements OnClickListener {
         listPopupWindow.setModal(true);
         listPopupWindow.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                // TODO: CONNECT TO DEVICE HERE!
                 TextView selectedItemView = (TextView) arg1;
                 String selectedItemStr = selectedItemView.getText().toString();
-                hc05MacId = selectedItemStr.substring(selectedItemStr.indexOf("\n") + "\n".length());
+
                 // MAC ID for HC-05 module: 98:D3:31:40:20:D9
-//                hc05MacId = "98:D3:31:40:20:D9";
+                hc05MacId = selectedItemStr.substring(selectedItemStr.indexOf("\n") + "\n".length());
+
                 if (mBluetoothAdapter == null) {
                     Log.i("BT_TEST: FATAL ERROR", "Bluetooth adapter is null!");
                 } else {
@@ -339,103 +293,5 @@ public class MainActivity extends Activity implements OnClickListener {
             mBluetoothAdapter.cancelDiscovery();
         }
     }
-
-//    private class ConnectToBtTask extends AsyncTask<Void, Void, Void> {
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//
-//            // Close discovery
-//            if (mBluetoothAdapter.isDiscovering()) mBluetoothAdapter.cancelDiscovery();
-//
-//            // Initialize the remote device's address
-//            if (!hc05MacId.isEmpty()) btDevice = mBluetoothAdapter.getRemoteDevice(hc05MacId);
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... unusedVoids) {
-//            // Create socket
-//            try {
-//                btSocket = btDevice.createInsecureRfcommSocketToServiceRecord(MY_UUID);
-//            } catch (IOException ioe) {
-//                ioe.printStackTrace();
-//                Log.i("BT_TEST: FATAL ERROR", "Failed to create socket");
-//            }
-//
-//            // Connect to remote device
-//            try {
-//                btSocket.connect();
-//                SOCKET_CONNECTED = true;
-//            } catch (IOException ioe) {
-//                ioe.printStackTrace();
-//                Log.i("BT_TEST: FATAL ERROR", "Failed to connect to socket. Closing socket...");
-//                try {
-//                    btSocket.close();
-//                } catch (IOException ioe2) {
-//                    ioe2.printStackTrace();
-//                    Log.i("BT_TEST: FATAL ERROR", "Failed to close socket");
-//                }
-//            }
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void unusedVoid) {
-//            super.onPostExecute(unusedVoid);
-//
-//            // Create data stream to talk to device
-//            mConnectedThread = new ConnectedThread(btSocket);
-//            mConnectedThread.start();
-//
-//            Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
-//            myIntent.putExtra("hc05MacId", hc05MacId);
-//            MainActivity.this.startActivity(myIntent);
-//        }
-//    }
-
-//    private class ConnectedThread extends Thread {
-//        private final InputStream inStream;
-////        private final OutputStream outStream;
-//
-//        public ConnectedThread(BluetoothSocket socket) {
-//            InputStream tmpIn = null;
-////            OutputStream tmpOut = null;
-//
-//            try {
-//                tmpIn = socket.getInputStream();
-//                if (tmpIn != null) SOCKET_INSTREAM_ACTIVE = true;
-////                tmpOut = socket.getOutputStream();
-//            } catch (IOException ioe) {
-//                ioe.printStackTrace();
-//                Log.i("BT_TEST: FATAL ERROR", "Failed to get input stream from socket");
-//            }
-//
-//            inStream = tmpIn;
-////            outStream = tmpOut;
-//        }
-//
-//        public void run() {
-//            Log.i("BT_TEST", "ConnectedThread running (receiving data) ...");
-//            byte[] buffer = new byte[256];
-//            int bytes;
-//
-//            while (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
-//                try {
-//                    bytes = inStream.read(buffer);
-//                    mHandler.obtainMessage(RECEIVE_MESSAGE, bytes, -1, buffer).sendToTarget();
-//                } catch (IOException ioe) {
-//                    ioe.printStackTrace();
-//                    Log.i("BT_TEST: FATAL ERROR", "Failed to read data. Closing btSocket...");
-//                    try {
-//                        btSocket.close();
-//                    } catch (IOException ioe2) {
-//                        ioe2.printStackTrace();
-//                        Log.i("BT_TEST: FATAL ERROR", "Failed to close socket");
-//                    }
-//                }
-//            }
-//        }
-//    }
 
 }

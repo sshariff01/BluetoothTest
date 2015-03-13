@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public class FeedbackActivity extends Activity {
     private ConnectedThread mConnectedThread;
-    private Handler mHandler;
+    private static Handler mHandler;
     private static final int RECEIVE_MESSAGE = 1;
     private StringBuffer sb = new StringBuffer();
 
@@ -32,7 +32,7 @@ public class FeedbackActivity extends Activity {
     private static boolean SOCKET_CONNECTED = false;
     private static String hc05MacId = new String();
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
+    protected static TextView text;
 
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -42,42 +42,10 @@ public class FeedbackActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
 
-        final TextView text = (TextView) findViewById(R.id.helloworld);
+        text = (TextView) findViewById(R.id.helloworld);
 
         Intent intent = getIntent();
         hc05MacId = intent.getStringExtra("hc05MacId");
-
-        mHandler = new Handler() {
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case RECEIVE_MESSAGE:
-                        byte[] readBuf = (byte[]) msg.obj;
-                        String readMessage = new String(readBuf, 0, msg.arg1);
-
-                        // Send to text file for now sdcard/debug/testBTData.txt
-//                        if (isExternalStorageWritable()) writeToSD(readMessage);
-
-                        sb.append(readMessage);
-
-                        try {
-//                            int startIndex = sb.indexOf("Analog1 reading =") + "Analog1 reading =".length() + 1;
-//                            int endIndex = sb.substring(startIndex).indexOf("\n");
-//                            if (startIndex > 0 & endIndex > 0) {
-//                                String value = sb.substring(startIndex, startIndex + endIndex);
-
-                            text.setText("Value from BT module: " + sb.toString());
-//                            }
-                        } catch (StringIndexOutOfBoundsException e) {
-                            Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
-                            e.printStackTrace();
-
-                        }
-
-                        sb.delete(0, sb.length());
-                        break;
-                }
-            };
-        };
 
         new ConnectToBtTask().execute();
     }
@@ -105,6 +73,9 @@ public class FeedbackActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * ASYNC TASKS AND OTHER THREADS
+     */
     private class ConnectToBtTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -166,6 +137,30 @@ public class FeedbackActivity extends Activity {
             try {
                 tmpIn = socket.getInputStream();
                 if (tmpIn != null) SOCKET_INSTREAM_ACTIVE = true;
+
+                if (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
+                    mHandler = new Handler() {
+                        public void handleMessage(Message msg) {
+                            switch (msg.what) {
+                                case RECEIVE_MESSAGE:
+                                    byte[] readBuf = (byte[]) msg.obj;
+                                    String readMessage = new String(readBuf, 0, msg.arg1);
+
+                                    sb.append(readMessage);
+
+                                    try {
+                                        text.setText("Value from BT module: " + sb.toString());
+                                    } catch (StringIndexOutOfBoundsException e) {
+                                        Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
+                                        e.printStackTrace();
+                                    }
+
+                                    sb.delete(0, sb.length());
+                                    break;
+                            }
+                        };
+                    };
+                }
 //                tmpOut = socket.getOutputStream();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -180,6 +175,8 @@ public class FeedbackActivity extends Activity {
             Log.i("BT_TEST", "ConnectedThread running (receiving data) ...");
             byte[] buffer = new byte[256];
             int bytes;
+
+
 
             while (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
                 try {
