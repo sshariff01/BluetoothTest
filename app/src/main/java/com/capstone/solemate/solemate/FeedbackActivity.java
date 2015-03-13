@@ -119,10 +119,15 @@ public class FeedbackActivity extends Activity {
         @Override
         protected void onPostExecute(Void unusedVoid) {
             super.onPostExecute(unusedVoid);
-
-            // Create data stream to talk to device
-            mConnectedThread = new ConnectedThread(btSocket);
-            mConnectedThread.start();
+//            SOCKET_CONNECTED = false;
+            if (SOCKET_CONNECTED) {
+                // Create data stream to talk to device
+                mConnectedThread = new ConnectedThread(btSocket);
+                mConnectedThread.start();
+            } else {
+                Log.i("BT_TEST: FAIL", "Failed to connect to HC-05 Bluetooth socket");
+                finish();
+            }
         }
     }
 

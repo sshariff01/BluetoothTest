@@ -3,7 +3,6 @@ package com.capstone.solemate.solemate;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -108,8 +107,9 @@ public class MainActivity extends Activity implements OnClickListener {
                     if (!mBluetoothAdapter.isEnabled()) {
                         Log.i("BT_TEST", "Bluetooth is not enabled!");
                     } else {
-                        // Connect to BT in async task thread
-//                        new ConnectToBtTask().execute();
+                        listPopupWindow.dismiss();
+
+                        // Launch new activity to connect to bluetooth and provide real-time user feedback
                         Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
                         myIntent.putExtra("hc05MacId", hc05MacId);
                         MainActivity.this.startActivity(myIntent);
