@@ -1,17 +1,85 @@
 package com.capstone.solemate.solemate;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
 
 
 public class FeedbackActivity extends Activity {
+    private ConnectedThread mConnectedThread;
+    private Handler mHandler;
+    private static final int RECEIVE_MESSAGE = 1;
+    private StringBuffer sb = new StringBuffer();
+
+    // BT device connection attributes
+    private BluetoothSocket btSocket;
+    private static BluetoothDevice btDevice;
+    private static boolean SOCKET_INSTREAM_ACTIVE = false;
+    private static boolean SOCKET_CONNECTED = false;
+    private static String hc05MacId = new String();
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+
+    // Init default bluetooth adapter
+    private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+
+        final TextView text = (TextView) findViewById(R.id.helloworld);
+
+        Intent intent = getIntent();
+        hc05MacId = intent.getStringExtra("hc05MacId");
+
+        mHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case RECEIVE_MESSAGE:
+                        byte[] readBuf = (byte[]) msg.obj;
+                        String readMessage = new String(readBuf, 0, msg.arg1);
+
+                        // Send to text file for now sdcard/debug/testBTData.txt
+//                        if (isExternalStorageWritable()) writeToSD(readMessage);
+
+                        sb.append(readMessage);
+
+                        try {
+//                            int startIndex = sb.indexOf("Analog1 reading =") + "Analog1 reading =".length() + 1;
+//                            int endIndex = sb.substring(startIndex).indexOf("\n");
+//                            if (startIndex > 0 & endIndex > 0) {
+//                                String value = sb.substring(startIndex, startIndex + endIndex);
+
+                            text.setText("Value from BT module: " + sb.toString());
+//                            }
+                        } catch (StringIndexOutOfBoundsException e) {
+                            Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
+                            e.printStackTrace();
+
+                        }
+
+                        sb.delete(0, sb.length());
+                        break;
+                }
+            };
+        };
+
+        new ConnectToBtTask().execute();
     }
 
 
@@ -35,5 +103,99 @@ public class FeedbackActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class ConnectToBtTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // Close discovery
+            if (mBluetoothAdapter.isDiscovering()) mBluetoothAdapter.cancelDiscovery();
+
+            // Initialize the remote device's address
+            if (!hc05MacId.isEmpty()) btDevice = mBluetoothAdapter.getRemoteDevice(hc05MacId);
+        }
+
+        @Override
+        protected Void doInBackground(Void... unusedVoids) {
+            // Create socket
+            try {
+                btSocket = btDevice.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                Log.i("BT_TEST: FATAL ERROR", "Failed to create socket");
+            }
+
+            // Connect to remote device
+            try {
+                btSocket.connect();
+                SOCKET_CONNECTED = true;
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                Log.i("BT_TEST: FATAL ERROR", "Failed to connect to socket. Closing socket...");
+                try {
+                    btSocket.close();
+                } catch (IOException ioe2) {
+                    ioe2.printStackTrace();
+                    Log.i("BT_TEST: FATAL ERROR", "Failed to close socket");
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unusedVoid) {
+            super.onPostExecute(unusedVoid);
+
+            // Create data stream to talk to device
+            mConnectedThread = new ConnectedThread(btSocket);
+            mConnectedThread.start();
+        }
+    }
+
+    private class ConnectedThread extends Thread {
+        private final InputStream inStream;
+//        private final OutputStream outStream;
+
+        public ConnectedThread(BluetoothSocket socket) {
+            InputStream tmpIn = null;
+//            OutputStream tmpOut = null;
+
+            try {
+                tmpIn = socket.getInputStream();
+                if (tmpIn != null) SOCKET_INSTREAM_ACTIVE = true;
+//                tmpOut = socket.getOutputStream();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                Log.i("BT_TEST: FATAL ERROR", "Failed to get input stream from socket");
+            }
+
+            inStream = tmpIn;
+//            outStream = tmpOut;
+        }
+
+        public void run() {
+            Log.i("BT_TEST", "ConnectedThread running (receiving data) ...");
+            byte[] buffer = new byte[256];
+            int bytes;
+
+            while (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
+                try {
+                    bytes = inStream.read(buffer);
+                    mHandler.obtainMessage(RECEIVE_MESSAGE, bytes, -1, buffer).sendToTarget();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                    Log.i("BT_TEST: FATAL ERROR", "Failed to read data. Closing btSocket...");
+                    try {
+                        btSocket.close();
+                    } catch (IOException ioe2) {
+                        ioe2.printStackTrace();
+                        Log.i("BT_TEST: FATAL ERROR", "Failed to close socket");
+                    }
+                }
+            }
+        }
     }
 }
