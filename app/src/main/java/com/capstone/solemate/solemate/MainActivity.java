@@ -79,6 +79,11 @@ public class MainActivity extends Activity implements OnClickListener {
         init();
     }
 
+    protected void onDestroy() {
+        // Unregister receiver
+        unregisterReceiver(mReceiver);
+    }
+
     protected void init() {
         // Init discovery button
         startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
@@ -294,6 +299,7 @@ public class MainActivity extends Activity implements OnClickListener {
         protected void onPostExecute(Void unusedVoid) {
             super.onPostExecute(unusedVoid);
 
+            // Cancel discovery
             mBluetoothAdapter.cancelDiscovery();
         }
     }
