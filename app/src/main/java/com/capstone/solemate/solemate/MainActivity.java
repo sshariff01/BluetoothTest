@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -25,10 +24,6 @@ import android.widget.Button;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +34,6 @@ public class MainActivity extends Activity implements OnClickListener {
     // List to pass to list view array adapter
     private static List<String> discoveredDevices = new ArrayList<String>();
     private static ArrayAdapter arrayAdapter;
-
-    private static boolean WRITE_ENABLE_OPTION = true;
-    private static final String OUTPUT_FILE_NAME = "testBTData.txt";
 
     // BT device connection attributes
     private static String hc05MacId = new String();
@@ -87,6 +79,14 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
+
+        progress.dismiss();
+        listPopupWindow.dismiss();
+
+        // Clear list and adapter
+        discoveredDevices.clear();
+        arrayAdapter.clear();
+
         // Cancel bluetooth discovery
         mBluetoothAdapter.cancelDiscovery();
     }
@@ -94,6 +94,10 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        progress.dismiss();
+        listPopupWindow.dismiss();
+
         // Unregister receiver
         unregisterReceiver(mReceiver);
 
@@ -151,12 +155,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
         // Init loading spinner
         progress = new ProgressDialog(this);
-        progress.setTitle("Loading");
-        progress.setMessage("Wait while loading...");
+        progress.setTitle("Finding Your SoleMate");
+        progress.setMessage("Please wait...");
 
-//        progress.show();
-//        ShowProgressSpinner showProgressSpinner = new ShowProgressSpinner();
-//        showProgressSpinner.start();
     }
 
     public void onClick(View v) {
@@ -178,8 +179,11 @@ public class MainActivity extends Activity implements OnClickListener {
                  * Begin AsyncTask to start discovery
                  */
                 if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
-                    if (arrayAdapter.isEmpty()) new DiscoveryTask().execute();
-                    else listPopupWindow.show();
+                    if (arrayAdapter.isEmpty()) {
+                        new DiscoveryTask().execute();
+                    } else {
+                        listPopupWindow.show();
+                    }
 
                 } else {
                     if (mBluetoothAdapter.isDiscovering()) {
@@ -220,33 +224,6 @@ public class MainActivity extends Activity implements OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-     * HELPER METHODS
-     */
-    private boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) & WRITE_ENABLE_OPTION) return true;
-        return false;
-    }
-
-    private void writeToSD(String readMessage) {
-        File root = android.os.Environment.getExternalStorageDirectory();
-        File dir = new File (root.getAbsolutePath() + "/debug");
-        dir.mkdirs();
-        File file = new File(dir, OUTPUT_FILE_NAME);
-
-        try {
-            FileOutputStream fos = new FileOutputStream(file, true);
-            PrintWriter pw = new PrintWriter(fos);
-            pw.println(readMessage);
-            pw.flush();
-            pw.close();
-            fos.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-    }
 
     /*
      * ASYNC TASKS AND OTHER THREADS
@@ -264,7 +241,7 @@ public class MainActivity extends Activity implements OnClickListener {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             int count = 0;
-            while (!START_DISCOVERY && count < 3) {
+            while (!START_DISCOVERY && count < 4) {
                 if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
                     START_DISCOVERY = true;
                 } else {
@@ -274,7 +251,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
                     // Put this thread to sleep for 0.5s
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(2000);
                         Log.i("BT_TEST", "EnableBtTask sleeping for 3000ms...");
                         count++;
                     } catch (InterruptedException e) {
@@ -329,7 +306,7 @@ public class MainActivity extends Activity implements OnClickListener {
             // Cancel discovery
             mBluetoothAdapter.cancelDiscovery();
 
-            if (!mBluetoothAdapter.isDiscovering()) progress.dismiss();
+            progress.dismiss();
         }
     }
 

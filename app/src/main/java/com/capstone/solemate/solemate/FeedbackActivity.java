@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -14,8 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.UUID;
 
 
@@ -24,6 +28,9 @@ public class FeedbackActivity extends Activity {
     private static Handler mHandler;
     private static final int RECEIVE_MESSAGE = 1;
     private StringBuffer sb = new StringBuffer();
+
+    private static boolean WRITE_ENABLE_OPTION = true;
+    private static final String OUTPUT_FILE_NAME = "testBTData.txt";
 
     // BT device connection attributes
     private BluetoothSocket btSocket;
@@ -72,6 +79,35 @@ public class FeedbackActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /*
+     * HELPER METHODS
+     */
+    private boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) & WRITE_ENABLE_OPTION) return true;
+        return false;
+    }
+
+    private void writeToSD(String readMessage) {
+        File root = android.os.Environment.getExternalStorageDirectory();
+        File dir = new File (root.getAbsolutePath() + "/debug");
+        dir.mkdirs();
+        File file = new File(dir, OUTPUT_FILE_NAME);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file, true);
+            PrintWriter pw = new PrintWriter(fos);
+            pw.println(readMessage);
+            pw.flush();
+            pw.close();
+            fos.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+    }
+
 
     /*
      * ASYNC TASKS AND OTHER THREADS
@@ -151,10 +187,14 @@ public class FeedbackActivity extends Activity {
                                     byte[] readBuf = (byte[]) msg.obj;
                                     String readMessage = new String(readBuf, 0, msg.arg1);
 
+                                    if (isExternalStorageWritable()) {
+                                        writeToSD(readMessage);
+                                    }
+
                                     sb.append(readMessage);
 
                                     try {
-                                        text.setText("Value from BT module: " + sb.toString());
+                                        text.setText("Value from BT module: " + readMessage);
                                     } catch (StringIndexOutOfBoundsException e) {
                                         Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
                                         e.printStackTrace();
