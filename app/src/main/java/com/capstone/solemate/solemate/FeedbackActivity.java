@@ -1,6 +1,7 @@
 package com.capstone.solemate.solemate;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -27,7 +28,7 @@ public class FeedbackActivity extends Activity {
     private ConnectedThread mConnectedThread;
     private static Handler mHandler;
     private static final int RECEIVE_MESSAGE = 1;
-    private StringBuffer sb = new StringBuffer();
+    private StringBuilder sb;
 
     private static boolean WRITE_ENABLE_OPTION = true;
     private static final String OUTPUT_FILE_NAME = "testBTData.txt";
@@ -41,8 +42,12 @@ public class FeedbackActivity extends Activity {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     protected static TextView text;
 
+    // Loading spinner
+    public ProgressDialog progress;
+
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,12 @@ public class FeedbackActivity extends Activity {
 
         Intent intent = getIntent();
         hc05MacId = intent.getStringExtra("hc05MacId");
+
+        // Init loading spinner
+        progress = new ProgressDialog(this);
+        progress.setTitle("Connecting");
+        progress.setMessage("Please wait while we get in touch with your SoleMate...");
+        progress.show();
 
         new ConnectToBtTask().execute();
     }
@@ -98,7 +109,7 @@ public class FeedbackActivity extends Activity {
         try {
             FileOutputStream fos = new FileOutputStream(file, true);
             PrintWriter pw = new PrintWriter(fos);
-            pw.println(readMessage);
+            pw.print(readMessage);
             pw.flush();
             pw.close();
             fos.close();
@@ -107,7 +118,6 @@ public class FeedbackActivity extends Activity {
         }
 
     }
-
 
     /*
      * ASYNC TASKS AND OTHER THREADS
@@ -149,7 +159,14 @@ public class FeedbackActivity extends Activity {
                 }
             }
 
+            onProgressUpdate();
+
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... unusedVoid) {
+            progress.dismiss();
         }
 
         @Override
@@ -174,9 +191,9 @@ public class FeedbackActivity extends Activity {
         public ConnectedThread(BluetoothSocket socket) {
             InputStream tmpIn = null;
 //            OutputStream tmpOut = null;
-
             try {
                 tmpIn = socket.getInputStream();
+
                 if (tmpIn != null) SOCKET_INSTREAM_ACTIVE = true;
 
                 if (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
@@ -186,21 +203,43 @@ public class FeedbackActivity extends Activity {
                                 case RECEIVE_MESSAGE:
                                     byte[] readBuf = (byte[]) msg.obj;
                                     String readMessage = new String(readBuf, 0, msg.arg1);
+                                    String newReadMessage = new String();
+
+//                                    readMessage = readMessage.replaceAll("\\s+","");
 
                                     if (isExternalStorageWritable()) {
-                                        writeToSD(readMessage);
+                                        writeToSD("\nSTART\n" + readMessage + "\nEND\n");
                                     }
 
-                                    sb.append(readMessage);
 
-                                    try {
-                                        text.setText("Value from BT module: " + readMessage);
-                                    } catch (StringIndexOutOfBoundsException e) {
-                                        Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
-                                        e.printStackTrace();
-                                    }
+//                                    if (readMessage.contains("SHL0")) {
+//                                        readMessage = readMessage.replaceAll("\\s+","");
+//
+//                                        if (isExternalStorageWritable()) {
+//                                            writeToSD("\nREADMESSAGE_START\n" + readMessage + "\nEND\n");
+//                                        }
+//
+//                                        if (readMessage.length() > (readMessage.indexOf("SHL0") + 50)) {
+//                                            newReadMessage = readMessage.substring(
+//                                                    readMessage.indexOf("SHL0"),
+//                                                    readMessage.indexOf("SHL0") + 50
+//                                            );
 
-                                    sb.delete(0, sb.length());
+                                            try {
+                                                text.setText(readMessage);
+                                            } catch (StringIndexOutOfBoundsException e) {
+                                                sb = new StringBuilder();
+                                                sb = sb.append(readMessage);
+                                                Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
+                                                e.printStackTrace();
+                                            }
+
+//                                        }
+//                                    sb = sb.delete(0, sb.length()-1);
+
+//                                    }
+
+
                                     break;
                             }
                         };
@@ -218,14 +257,13 @@ public class FeedbackActivity extends Activity {
 
         public void run() {
             Log.i("BT_TEST", "ConnectedThread running (receiving data) ...");
-            byte[] buffer = new byte[256];
+            byte[] buffer = new byte[1];
             int bytes;
-
-
 
             while (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
                 try {
                     bytes = inStream.read(buffer);
+//                    if (isExternalStorageWritable()) writeToSD("\nINSTREAM_START\n" + inStream.toString() + "\nEND\n");
                     mHandler.obtainMessage(RECEIVE_MESSAGE, bytes, -1, buffer).sendToTarget();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
