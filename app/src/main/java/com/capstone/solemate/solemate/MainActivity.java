@@ -49,6 +49,9 @@ public class MainActivity extends Activity implements OnClickListener {
     public Button startDiscoveryButton;
     public ListPopupWindow listPopupWindow;
 
+    // Register the BroadcastReceiver
+    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -80,6 +83,9 @@ public class MainActivity extends Activity implements OnClickListener {
     protected void onPause() {
         super.onPause();
 
+        // Cancel bluetooth discovery
+        mBluetoothAdapter.cancelDiscovery();
+
         progress.dismiss();
         listPopupWindow.dismiss();
 
@@ -87,8 +93,13 @@ public class MainActivity extends Activity implements OnClickListener {
         discoveredDevices.clear();
         arrayAdapter.clear();
 
-        // Cancel bluetooth discovery
-        mBluetoothAdapter.cancelDiscovery();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
     }
 
     @Override
@@ -98,6 +109,9 @@ public class MainActivity extends Activity implements OnClickListener {
         progress.dismiss();
         listPopupWindow.dismiss();
 
+        // Make sure bluetooth is not discovering
+        mBluetoothAdapter.cancelDiscovery();
+
         // Unregister receiver
         unregisterReceiver(mReceiver);
 
@@ -105,14 +119,16 @@ public class MainActivity extends Activity implements OnClickListener {
         discoveredDevices.clear();
         arrayAdapter.clear();
 
-        // Make sure bluetooth is not discovering
-        mBluetoothAdapter.cancelDiscovery();
+
     }
 
     protected void init() {
         // Init discovery button
         startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
         startDiscoveryButton.setOnClickListener(this);
+//        startDiscoveryButton.setBackgroundColor(0xFF211a72);
+
+        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 
         // Init array adapter
         arrayAdapter = new ArrayAdapter(this, R.layout.device_list_item);
@@ -134,7 +150,8 @@ public class MainActivity extends Activity implements OnClickListener {
                 String selectedItemStr = selectedItemView.getText().toString();
 
                 // MAC ID for HC-05 module: 98:D3:31:40:20:D9
-                hc05MacId = selectedItemStr.substring(selectedItemStr.indexOf("\n") + "\n".length());
+//                hc05MacId = selectedItemStr.substring(selectedItemStr.indexOf("\n") + "\n".length());
+                hc05MacId = "98:D3:31:40:20:D9";
 
                 if (mBluetoothAdapter == null) {
                     Log.i("BT_TEST: FATAL ERROR", "Bluetooth adapter is null!");
@@ -173,27 +190,24 @@ public class MainActivity extends Activity implements OnClickListener {
                 /*
                  * Begin AsyncTask to enable BT
                  */
+                Log.i("BT_TEST", "Bluetooth is not enabled!");
                 new EnableBtTask().execute();
-            } else {
+            } else if (!mBluetoothAdapter.isDiscovering()) {
                 /*
                  * Begin AsyncTask to start discovery
                  */
-                if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
-                    if (arrayAdapter.isEmpty()) {
-                        new DiscoveryTask().execute();
-                    } else {
-                        listPopupWindow.show();
-                    }
-
+                if (arrayAdapter.isEmpty()) {
+                    new DiscoveryTask().execute();
                 } else {
-                    if (mBluetoothAdapter.isDiscovering()) {
-                        listPopupWindow.show();
-                        progress.show();
-                        Log.i("BT_TEST", "Bluetooth is already discovering!");
-                    } else if (!mBluetoothAdapter.isEnabled()) {
-                        Log.i("BT_TEST", "Bluetooth is not enabled!");
-                    }
+                    listPopupWindow.show();
                 }
+
+            } else if (mBluetoothAdapter.isDiscovering()) {
+                listPopupWindow.show();
+                progress.show();
+                Log.i("BT_TEST", "Bluetooth is already discovering!");
+//                    } else if (!mBluetoothAdapter.isEnabled()) {
+//                        Log.i("BT_TEST", "Bluetooth is not enabled!");
             }
 
         } else {
@@ -242,7 +256,7 @@ public class MainActivity extends Activity implements OnClickListener {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             int count = 0;
             while (!START_DISCOVERY && count < 4) {
-                if (mBluetoothAdapter.isEnabled() && !mBluetoothAdapter.isDiscovering()) {
+                if (mBluetoothAdapter.isEnabled()) {
                     START_DISCOVERY = true;
                 } else {
                     if (!mBluetoothAdapter.isEnabled()) {
@@ -279,32 +293,38 @@ public class MainActivity extends Activity implements OnClickListener {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            // Register the BroadcastReceiver
-            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
-
             listPopupWindow.show();
             progress.show();
+
         }
 
         @Override
         protected Void doInBackground(Void... unusedVoids) {
             if (mBluetoothAdapter.isEnabled()) {
                 boolean isDiscovering = mBluetoothAdapter.startDiscovery();
-                while (isDiscovering) {
+                int count = 0;
+                while (isDiscovering && count < 3) {
                     isDiscovering = mBluetoothAdapter.isDiscovering();
+                    count++;
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+
                 }
+
+                // Cancel discovery
+                mBluetoothAdapter.cancelDiscovery();
             }
 
             return null;
         }
 
+
         @Override
         protected void onPostExecute(Void unusedVoid) {
             super.onPostExecute(unusedVoid);
-
-            // Cancel discovery
-            mBluetoothAdapter.cancelDiscovery();
 
             progress.dismiss();
         }
