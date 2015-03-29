@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,7 +152,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
                 // MAC ID for HC-05 module: 98:D3:31:40:20:D9
 //                hc05MacId = selectedItemStr.substring(selectedItemStr.indexOf("\n") + "\n".length());
-                hc05MacId = "98:D3:31:40:20:D9";
+//                hc05MacId = "98:D3:31:40:20:D9";
+                hc05MacId = "00:06:66:67:EF:A5";
 
                 if (mBluetoothAdapter == null) {
                     Log.i("BT_TEST: FATAL ERROR", "Bluetooth adapter is null!");

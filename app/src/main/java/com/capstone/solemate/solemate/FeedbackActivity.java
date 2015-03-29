@@ -60,12 +60,12 @@ public class FeedbackActivity extends Activity {
         hc05MacId = intent.getStringExtra("hc05MacId");
 
         // Init loading spinner
-        progress = new ProgressDialog(this);
-        progress.setTitle("Connecting");
-        progress.setMessage("Please wait while we get in touch with your SoleMate...");
-        progress.show();
-
-        new ConnectToBtTask().execute();
+//        progress = new ProgressDialog(this);
+//        progress.setTitle("Connecting");
+//        progress.setMessage("Please wait while we get in touch with your SoleMate...");
+//        progress.show();
+//
+//        new ConnectToBtTask().execute();
     }
 
 
