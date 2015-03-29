@@ -15,7 +15,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -65,11 +67,21 @@ public class FeedbackActivity extends Activity {
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+    public static int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+
+        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
+        mainLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                index = (index+1) % 3;
+                Log.i("BT_TEST", "index val set to " + index);
+            }
+        });
 
         text = (TextView) findViewById(R.id.helloworld);
 
@@ -128,7 +140,6 @@ public class FeedbackActivity extends Activity {
 //        new ConnectToBtTask().execute();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -183,7 +194,7 @@ public class FeedbackActivity extends Activity {
      * ASYNC TASKS AND OTHER THREADS
      */
     private class ImageFlipperTask extends AsyncTask<Void, Void, Void> {
-        int index = 0;
+        int value = index;
 
         @Override
         protected void onPreExecute() {
@@ -193,8 +204,12 @@ public class FeedbackActivity extends Activity {
         @Override
         protected Void doInBackground(Void... unusedVoids) {
             while(true) {
-                onProgressUpdate();
                 try {
+                    value = index;
+                    onProgressUpdate();
+                    Thread.sleep(500);
+                    value = 3;
+                    onProgressUpdate();
                     Thread.sleep(500);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
@@ -209,22 +224,74 @@ public class FeedbackActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (index == 0) {
+                    if (value == 0) {
+                        imageToeYellow.setVisibility(View.GONE);
+                        imageRightBridgeYellow.setVisibility(View.GONE);
+                        imageLeftSideYellow.setVisibility(View.GONE);
+                        imageHeelYellow.setVisibility(View.GONE);
+
+                        imageToeRed.setVisibility(View.GONE);
+                        imageRightBridgeRed.setVisibility(View.GONE);
+                        imageLeftSideRed.setVisibility(View.GONE);
+                        imageHeelRed.setVisibility(View.GONE);
+
                         imageToeBlue.setVisibility(View.VISIBLE);
                         imageRightBridgeBlue.setVisibility(View.VISIBLE);
                         imageLeftSideBlue.setVisibility(View.VISIBLE);
                         imageHeelBlue.setVisibility(View.VISIBLE);
 
-                        Log.i("BT_TEST", "Visibility set OFF");
-                        index = 1;
-                    } else {
+                        Log.i("BT_TEST", "BLUE set ON");
+                    } else if (value == 1) {
+                        imageToeYellow.setVisibility(View.GONE);
+                        imageRightBridgeYellow.setVisibility(View.GONE);
+                        imageLeftSideYellow.setVisibility(View.GONE);
+                        imageHeelYellow.setVisibility(View.GONE);
+
+                        imageToeRed.setVisibility(View.VISIBLE);
+                        imageRightBridgeRed.setVisibility(View.VISIBLE);
+                        imageLeftSideRed.setVisibility(View.VISIBLE);
+                        imageHeelRed.setVisibility(View.VISIBLE);
+
                         imageToeBlue.setVisibility(View.GONE);
                         imageRightBridgeBlue.setVisibility(View.GONE);
                         imageLeftSideBlue.setVisibility(View.GONE);
                         imageHeelBlue.setVisibility(View.GONE);
 
-                        Log.i("BT_TEST", "Visibility set ON");
-                        index = 0;
+                        Log.i("BT_TEST", "RED set ON");
+                    } else if (value == 2) {
+                        imageToeYellow.setVisibility(View.VISIBLE);
+                        imageRightBridgeYellow.setVisibility(View.VISIBLE);
+                        imageLeftSideYellow.setVisibility(View.VISIBLE);
+                        imageHeelYellow.setVisibility(View.VISIBLE);
+
+                        imageToeRed.setVisibility(View.GONE);
+                        imageRightBridgeRed.setVisibility(View.GONE);
+                        imageLeftSideRed.setVisibility(View.GONE);
+                        imageHeelRed.setVisibility(View.GONE);
+
+                        imageToeBlue.setVisibility(View.GONE);
+                        imageRightBridgeBlue.setVisibility(View.GONE);
+                        imageLeftSideBlue.setVisibility(View.GONE);
+                        imageHeelBlue.setVisibility(View.GONE);
+
+                        Log.i("BT_TEST", "YELLOW set ON");
+                    } else {
+                        imageToeYellow.setVisibility(View.GONE);
+                        imageRightBridgeYellow.setVisibility(View.GONE);
+                        imageLeftSideYellow.setVisibility(View.GONE);
+                        imageHeelYellow.setVisibility(View.GONE);
+
+                        imageToeRed.setVisibility(View.GONE);
+                        imageRightBridgeRed.setVisibility(View.GONE);
+                        imageLeftSideRed.setVisibility(View.GONE);
+                        imageHeelRed.setVisibility(View.GONE);
+
+                        imageToeBlue.setVisibility(View.GONE);
+                        imageRightBridgeBlue.setVisibility(View.GONE);
+                        imageLeftSideBlue.setVisibility(View.GONE);
+                        imageHeelBlue.setVisibility(View.GONE);
+
+                        Log.i("BT_TEST", "ALL set OFF");
                     }
 
                 }
