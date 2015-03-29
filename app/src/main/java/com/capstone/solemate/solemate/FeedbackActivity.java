@@ -46,6 +46,8 @@ public class FeedbackActivity extends Activity {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     protected static TextView text;
 
+    protected static int TOE_MODERATE, RIGHTBRIDGE_MODERATE, LEFT_MODERATE, HEEL_MODERATE;
+
     protected static ImageView imageFootBase;
     protected static ImageView imageToeModerate,
             imageRightBridgeModerate,
@@ -195,6 +197,10 @@ public class FeedbackActivity extends Activity {
      */
     private class ImageFlipperTask extends AsyncTask<Void, Void, Void> {
         int value = index;
+        ImageView[] toeImages = {imageToeLight, imageToeModerate, imageToeHeavy};
+        ImageView[] rightBridgeImages = {imageRightBridgeLight, imageRightBridgeModerate, imageRightBridgeHeavy};
+        ImageView[] leftSideImages = {imageLeftSideLight, imageLeftSideModerate, imageLeftSideHeavy};
+        ImageView[] heelImages = {imageHeelLight, imageHeelModerate, imageHeelHeavy};
 
         @Override
         protected void onPreExecute() {
@@ -225,71 +231,71 @@ public class FeedbackActivity extends Activity {
                 @Override
                 public void run() {
                     if (value == 0) {
-                        imageToeLight.setVisibility(View.GONE);
-                        imageRightBridgeLight.setVisibility(View.GONE);
-                        imageLeftSideLight.setVisibility(View.GONE);
-                        imageHeelLight.setVisibility(View.GONE);
+                        toeImages[0].setVisibility(View.GONE);
+                        rightBridgeImages[0].setVisibility(View.GONE);
+                        leftSideImages[0].setVisibility(View.GONE);
+                        heelImages[0].setVisibility(View.GONE);
 
-                        imageToeHeavy.setVisibility(View.GONE);
-                        imageRightBridgeHeavy.setVisibility(View.GONE);
-                        imageLeftSideHeavy.setVisibility(View.GONE);
-                        imageHeelHeavy.setVisibility(View.GONE);
+                        toeImages[1].setVisibility(View.VISIBLE);
+                        rightBridgeImages[1].setVisibility(View.VISIBLE);
+                        leftSideImages[1].setVisibility(View.VISIBLE);
+                        heelImages[1].setVisibility(View.VISIBLE);
 
-                        imageToeModerate.setVisibility(View.VISIBLE);
-                        imageRightBridgeModerate.setVisibility(View.VISIBLE);
-                        imageLeftSideModerate.setVisibility(View.VISIBLE);
-                        imageHeelModerate.setVisibility(View.VISIBLE);
+                        toeImages[2].setVisibility(View.GONE);
+                        rightBridgeImages[2].setVisibility(View.GONE);
+                        leftSideImages[2].setVisibility(View.GONE);
+                        heelImages[2].setVisibility(View.GONE);
 
                         Log.i("BT_TEST", "Moderate set ON");
                     } else if (value == 1) {
-                        imageToeLight.setVisibility(View.GONE);
-                        imageRightBridgeLight.setVisibility(View.GONE);
-                        imageLeftSideLight.setVisibility(View.GONE);
-                        imageHeelLight.setVisibility(View.GONE);
+                        toeImages[0].setVisibility(View.GONE);
+                        rightBridgeImages[0].setVisibility(View.GONE);
+                        leftSideImages[0].setVisibility(View.GONE);
+                        heelImages[0].setVisibility(View.GONE);
 
-                        imageToeHeavy.setVisibility(View.VISIBLE);
-                        imageRightBridgeHeavy.setVisibility(View.VISIBLE);
-                        imageLeftSideHeavy.setVisibility(View.VISIBLE);
-                        imageHeelHeavy.setVisibility(View.VISIBLE);
+                        toeImages[1].setVisibility(View.GONE);
+                        rightBridgeImages[1].setVisibility(View.GONE);
+                        leftSideImages[1].setVisibility(View.GONE);
+                        heelImages[1].setVisibility(View.GONE);
 
-                        imageToeModerate.setVisibility(View.GONE);
-                        imageRightBridgeModerate.setVisibility(View.GONE);
-                        imageLeftSideModerate.setVisibility(View.GONE);
-                        imageHeelModerate.setVisibility(View.GONE);
+                        toeImages[2].setVisibility(View.VISIBLE);
+                        rightBridgeImages[2].setVisibility(View.VISIBLE);
+                        leftSideImages[2].setVisibility(View.VISIBLE);
+                        heelImages[2].setVisibility(View.VISIBLE);
 
                         Log.i("BT_TEST", "Heavy set ON");
                     } else if (value == 2) {
-                        imageToeLight.setVisibility(View.VISIBLE);
-                        imageRightBridgeLight.setVisibility(View.VISIBLE);
-                        imageLeftSideLight.setVisibility(View.VISIBLE);
-                        imageHeelLight.setVisibility(View.VISIBLE);
+                        toeImages[0].setVisibility(View.VISIBLE);
+                        rightBridgeImages[0].setVisibility(View.VISIBLE);
+                        leftSideImages[0].setVisibility(View.VISIBLE);
+                        heelImages[0].setVisibility(View.VISIBLE);
 
-                        imageToeHeavy.setVisibility(View.GONE);
-                        imageRightBridgeHeavy.setVisibility(View.GONE);
-                        imageLeftSideHeavy.setVisibility(View.GONE);
-                        imageHeelHeavy.setVisibility(View.GONE);
+                        toeImages[1].setVisibility(View.GONE);
+                        rightBridgeImages[1].setVisibility(View.GONE);
+                        leftSideImages[1].setVisibility(View.GONE);
+                        heelImages[1].setVisibility(View.GONE);
 
-                        imageToeModerate.setVisibility(View.GONE);
-                        imageRightBridgeModerate.setVisibility(View.GONE);
-                        imageLeftSideModerate.setVisibility(View.GONE);
-                        imageHeelModerate.setVisibility(View.GONE);
+                        toeImages[2].setVisibility(View.GONE);
+                        rightBridgeImages[2].setVisibility(View.GONE);
+                        leftSideImages[2].setVisibility(View.GONE);
+                        heelImages[2].setVisibility(View.GONE);
 
                         Log.i("BT_TEST", "Light set ON");
                     } else {
-                        imageToeLight.setVisibility(View.GONE);
-                        imageRightBridgeLight.setVisibility(View.GONE);
-                        imageLeftSideLight.setVisibility(View.GONE);
-                        imageHeelLight.setVisibility(View.GONE);
+                        toeImages[0].setVisibility(View.GONE);
+                        rightBridgeImages[0].setVisibility(View.GONE);
+                        leftSideImages[0].setVisibility(View.GONE);
+                        heelImages[0].setVisibility(View.GONE);
 
-                        imageToeHeavy.setVisibility(View.GONE);
-                        imageRightBridgeHeavy.setVisibility(View.GONE);
-                        imageLeftSideHeavy.setVisibility(View.GONE);
-                        imageHeelHeavy.setVisibility(View.GONE);
+                        toeImages[1].setVisibility(View.GONE);
+                        rightBridgeImages[1].setVisibility(View.GONE);
+                        leftSideImages[1].setVisibility(View.GONE);
+                        heelImages[1].setVisibility(View.GONE);
 
-                        imageToeModerate.setVisibility(View.GONE);
-                        imageRightBridgeModerate.setVisibility(View.GONE);
-                        imageLeftSideModerate.setVisibility(View.GONE);
-                        imageHeelModerate.setVisibility(View.GONE);
+                        toeImages[2].setVisibility(View.GONE);
+                        rightBridgeImages[2].setVisibility(View.GONE);
+                        leftSideImages[2].setVisibility(View.GONE);
+                        heelImages[2].setVisibility(View.GONE);
 
                         Log.i("BT_TEST", "ALL set OFF");
                     }
