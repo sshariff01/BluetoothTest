@@ -14,6 +14,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -42,6 +44,21 @@ public class FeedbackActivity extends Activity {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     protected static TextView text;
 
+    protected static ImageView imageFootBase;
+    protected static ImageView imageToeBlue,
+            imageRightBridgeBlue,
+            imageLeftSideBlue,
+            imageHeelBlue;
+    protected static ImageView
+            imageToeRed,
+            imageRightBridgeRed,
+            imageLeftSideRed,
+            imageHeelRed;
+    protected static ImageView imageToeYellow,
+            imageRightBridgeYellow,
+            imageLeftSideYellow,
+            imageHeelYellow;
+
     // Loading spinner
     public ProgressDialog progress;
 
@@ -58,6 +75,49 @@ public class FeedbackActivity extends Activity {
 
         Intent intent = getIntent();
         hc05MacId = intent.getStringExtra("hc05MacId");
+
+        /*
+         * YELLOW GLOWS
+         */
+        imageToeYellow = (ImageView) findViewById(R.id.toeYellow);
+        imageToeYellow.setVisibility(View.GONE);
+        imageRightBridgeYellow = (ImageView) findViewById(R.id.rightBridgeYellow);
+        imageRightBridgeYellow.setVisibility(View.GONE);
+        imageLeftSideYellow = (ImageView) findViewById(R.id.leftSideYellow);
+        imageLeftSideYellow.setVisibility(View.GONE);
+        imageHeelYellow = (ImageView) findViewById(R.id.heelYellow);
+        imageHeelYellow.setVisibility(View.GONE);
+
+        /*
+         * RED GLOWS
+         */
+        imageToeRed = (ImageView) findViewById(R.id.toeBlue);
+        imageToeRed.setVisibility(View.GONE);
+        imageRightBridgeRed = (ImageView) findViewById(R.id.rightBridgeBlue);
+        imageRightBridgeRed.setVisibility(View.GONE);
+        imageLeftSideRed = (ImageView) findViewById(R.id.leftSideBlue);
+        imageLeftSideRed.setVisibility(View.GONE);
+        imageHeelRed = (ImageView) findViewById(R.id.heelBlue);
+        imageHeelRed.setVisibility(View.GONE);
+
+        /*
+         * BLUE GLOWS
+         */
+        imageToeBlue = (ImageView) findViewById(R.id.toeBlue);
+        imageToeBlue.setVisibility(View.GONE);
+        imageRightBridgeBlue = (ImageView) findViewById(R.id.rightBridgeBlue);
+        imageRightBridgeBlue.setVisibility(View.GONE);
+        imageLeftSideBlue = (ImageView) findViewById(R.id.leftSideBlue);
+        imageLeftSideBlue.setVisibility(View.GONE);
+        imageHeelBlue = (ImageView) findViewById(R.id.heelBlue);
+        imageHeelBlue.setVisibility(View.GONE);
+
+        /*
+         * BASE FOOT IMAGE
+         */
+        imageFootBase = (ImageView) findViewById(R.id.footBase);
+
+        new ImageFlipperTask().execute();
 
         // Init loading spinner
 //        progress = new ProgressDialog(this);
@@ -122,6 +182,62 @@ public class FeedbackActivity extends Activity {
     /*
      * ASYNC TASKS AND OTHER THREADS
      */
+    private class ImageFlipperTask extends AsyncTask<Void, Void, Void> {
+        int index = 0;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... unusedVoids) {
+            while(true) {
+                onProgressUpdate();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+
+            }
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... unusedVoid) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (index == 0) {
+                        imageToeBlue.setVisibility(View.VISIBLE);
+                        imageRightBridgeBlue.setVisibility(View.VISIBLE);
+                        imageLeftSideBlue.setVisibility(View.VISIBLE);
+                        imageHeelBlue.setVisibility(View.VISIBLE);
+
+                        Log.i("BT_TEST", "Visibility set OFF");
+                        index = 1;
+                    } else {
+                        imageToeBlue.setVisibility(View.GONE);
+                        imageRightBridgeBlue.setVisibility(View.GONE);
+                        imageLeftSideBlue.setVisibility(View.GONE);
+                        imageHeelBlue.setVisibility(View.GONE);
+
+                        Log.i("BT_TEST", "Visibility set ON");
+                        index = 0;
+                    }
+
+                }
+            });
+
+        }
+
+        @Override
+        protected void onPostExecute(Void unusedVoid) {
+            super.onPostExecute(unusedVoid);
+        }
+    }
+
     private class ConnectToBtTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
