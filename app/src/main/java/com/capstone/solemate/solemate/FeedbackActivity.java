@@ -46,7 +46,7 @@ public class FeedbackActivity extends Activity {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     protected static TextView text;
 
-    protected static int TOE_MODERATE, RIGHTBRIDGE_MODERATE, LEFT_MODERATE, HEEL_MODERATE;
+    protected static int HEEL_MODERATE, LEFT_MODERATE, RIGHTBRIDGE_MODERATE, TOE_MODERATE;
 
     protected static ImageView imageFootBase;
     protected static ImageView imageToeModerate,
@@ -63,6 +63,11 @@ public class FeedbackActivity extends Activity {
             imageLeftSideLight,
             imageHeelLight;
 
+    public static int pressureIndex_Heel = 1,
+            pressureIndex_Left = 1,
+            pressureIndex_RightBridge = 1,
+            pressureIndex_Toe = 1;
+
     // Loading spinner
     public ProgressDialog progress;
 
@@ -70,6 +75,9 @@ public class FeedbackActivity extends Activity {
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     public static int index = 0;
+
+    // Set to false when going in production!
+    public static boolean DEBUG_TEST_MODE = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +205,7 @@ public class FeedbackActivity extends Activity {
      */
     private class ImageFlipperTask extends AsyncTask<Void, Void, Void> {
         int value = index;
+        boolean SHOW_IMAGES = true;
         ImageView[] toeImages = {imageToeLight, imageToeModerate, imageToeHeavy};
         ImageView[] rightBridgeImages = {imageRightBridgeLight, imageRightBridgeModerate, imageRightBridgeHeavy};
         ImageView[] leftSideImages = {imageLeftSideLight, imageLeftSideModerate, imageLeftSideHeavy};
@@ -211,12 +220,21 @@ public class FeedbackActivity extends Activity {
         protected Void doInBackground(Void... unusedVoids) {
             while(true) {
                 try {
-                    value = index;
-                    onProgressUpdate();
-                    Thread.sleep(500);
-                    value = 3;
-                    onProgressUpdate();
-                    Thread.sleep(500);
+                    if (DEBUG_TEST_MODE) {
+                        value = index;
+                        onProgressUpdate();
+                        Thread.sleep(500);
+                        value = 3;
+                        onProgressUpdate();
+                        Thread.sleep(500);
+                    } else {
+                        SHOW_IMAGES = true;
+                        onProgressUpdate();
+                        Thread.sleep(500);
+                        SHOW_IMAGES = false;
+                        onProgressUpdate();
+                        Thread.sleep(500);
+                    }
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -230,74 +248,143 @@ public class FeedbackActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (value == 0) {
-                        toeImages[0].setVisibility(View.GONE);
-                        rightBridgeImages[0].setVisibility(View.GONE);
-                        leftSideImages[0].setVisibility(View.GONE);
-                        heelImages[0].setVisibility(View.GONE);
+                    if (DEBUG_TEST_MODE) {
+                        if (value == 0) {
+                            toeImages[0].setVisibility(View.GONE);
+                            rightBridgeImages[0].setVisibility(View.GONE);
+                            leftSideImages[0].setVisibility(View.GONE);
+                            heelImages[0].setVisibility(View.GONE);
 
-                        toeImages[1].setVisibility(View.VISIBLE);
-                        rightBridgeImages[1].setVisibility(View.VISIBLE);
-                        leftSideImages[1].setVisibility(View.VISIBLE);
-                        heelImages[1].setVisibility(View.VISIBLE);
+                            toeImages[1].setVisibility(View.VISIBLE);
+                            rightBridgeImages[1].setVisibility(View.VISIBLE);
+                            leftSideImages[1].setVisibility(View.VISIBLE);
+                            heelImages[1].setVisibility(View.VISIBLE);
 
-                        toeImages[2].setVisibility(View.GONE);
-                        rightBridgeImages[2].setVisibility(View.GONE);
-                        leftSideImages[2].setVisibility(View.GONE);
-                        heelImages[2].setVisibility(View.GONE);
+                            toeImages[2].setVisibility(View.GONE);
+                            rightBridgeImages[2].setVisibility(View.GONE);
+                            leftSideImages[2].setVisibility(View.GONE);
+                            heelImages[2].setVisibility(View.GONE);
 
-                        Log.i("BT_TEST", "Moderate set ON");
-                    } else if (value == 1) {
-                        toeImages[0].setVisibility(View.GONE);
-                        rightBridgeImages[0].setVisibility(View.GONE);
-                        leftSideImages[0].setVisibility(View.GONE);
-                        heelImages[0].setVisibility(View.GONE);
+                            Log.i("BT_TEST", "Moderate set ON");
+                        } else if (value == 1) {
+                            toeImages[0].setVisibility(View.GONE);
+                            rightBridgeImages[0].setVisibility(View.GONE);
+                            leftSideImages[0].setVisibility(View.GONE);
+                            heelImages[0].setVisibility(View.GONE);
 
-                        toeImages[1].setVisibility(View.GONE);
-                        rightBridgeImages[1].setVisibility(View.GONE);
-                        leftSideImages[1].setVisibility(View.GONE);
-                        heelImages[1].setVisibility(View.GONE);
+                            toeImages[1].setVisibility(View.GONE);
+                            rightBridgeImages[1].setVisibility(View.GONE);
+                            leftSideImages[1].setVisibility(View.GONE);
+                            heelImages[1].setVisibility(View.GONE);
 
-                        toeImages[2].setVisibility(View.VISIBLE);
-                        rightBridgeImages[2].setVisibility(View.VISIBLE);
-                        leftSideImages[2].setVisibility(View.VISIBLE);
-                        heelImages[2].setVisibility(View.VISIBLE);
+                            toeImages[2].setVisibility(View.VISIBLE);
+                            rightBridgeImages[2].setVisibility(View.VISIBLE);
+                            leftSideImages[2].setVisibility(View.VISIBLE);
+                            heelImages[2].setVisibility(View.VISIBLE);
 
-                        Log.i("BT_TEST", "Heavy set ON");
-                    } else if (value == 2) {
-                        toeImages[0].setVisibility(View.VISIBLE);
-                        rightBridgeImages[0].setVisibility(View.VISIBLE);
-                        leftSideImages[0].setVisibility(View.VISIBLE);
-                        heelImages[0].setVisibility(View.VISIBLE);
+                            Log.i("BT_TEST", "Heavy set ON");
+                        } else if (value == 2) {
+                            toeImages[0].setVisibility(View.VISIBLE);
+                            rightBridgeImages[0].setVisibility(View.VISIBLE);
+                            leftSideImages[0].setVisibility(View.VISIBLE);
+                            heelImages[0].setVisibility(View.VISIBLE);
 
-                        toeImages[1].setVisibility(View.GONE);
-                        rightBridgeImages[1].setVisibility(View.GONE);
-                        leftSideImages[1].setVisibility(View.GONE);
-                        heelImages[1].setVisibility(View.GONE);
+                            toeImages[1].setVisibility(View.GONE);
+                            rightBridgeImages[1].setVisibility(View.GONE);
+                            leftSideImages[1].setVisibility(View.GONE);
+                            heelImages[1].setVisibility(View.GONE);
 
-                        toeImages[2].setVisibility(View.GONE);
-                        rightBridgeImages[2].setVisibility(View.GONE);
-                        leftSideImages[2].setVisibility(View.GONE);
-                        heelImages[2].setVisibility(View.GONE);
+                            toeImages[2].setVisibility(View.GONE);
+                            rightBridgeImages[2].setVisibility(View.GONE);
+                            leftSideImages[2].setVisibility(View.GONE);
+                            heelImages[2].setVisibility(View.GONE);
 
-                        Log.i("BT_TEST", "Light set ON");
+                            Log.i("BT_TEST", "Light set ON");
+                        } else {
+                            toeImages[0].setVisibility(View.GONE);
+                            rightBridgeImages[0].setVisibility(View.GONE);
+                            leftSideImages[0].setVisibility(View.GONE);
+                            heelImages[0].setVisibility(View.GONE);
+
+                            toeImages[1].setVisibility(View.GONE);
+                            rightBridgeImages[1].setVisibility(View.GONE);
+                            leftSideImages[1].setVisibility(View.GONE);
+                            heelImages[1].setVisibility(View.GONE);
+
+                            toeImages[2].setVisibility(View.GONE);
+                            rightBridgeImages[2].setVisibility(View.GONE);
+                            leftSideImages[2].setVisibility(View.GONE);
+                            heelImages[2].setVisibility(View.GONE);
+
+                            Log.i("BT_TEST", "ALL set OFF");
+                        }
                     } else {
                         toeImages[0].setVisibility(View.GONE);
-                        rightBridgeImages[0].setVisibility(View.GONE);
-                        leftSideImages[0].setVisibility(View.GONE);
-                        heelImages[0].setVisibility(View.GONE);
-
                         toeImages[1].setVisibility(View.GONE);
-                        rightBridgeImages[1].setVisibility(View.GONE);
-                        leftSideImages[1].setVisibility(View.GONE);
-                        heelImages[1].setVisibility(View.GONE);
-
                         toeImages[2].setVisibility(View.GONE);
+
+                        rightBridgeImages[0].setVisibility(View.GONE);
+                        rightBridgeImages[1].setVisibility(View.GONE);
                         rightBridgeImages[2].setVisibility(View.GONE);
+
+                        leftSideImages[0].setVisibility(View.GONE);
+                        leftSideImages[1].setVisibility(View.GONE);
                         leftSideImages[2].setVisibility(View.GONE);
+
+                        heelImages[0].setVisibility(View.GONE);
+                        heelImages[1].setVisibility(View.GONE);
                         heelImages[2].setVisibility(View.GONE);
 
-                        Log.i("BT_TEST", "ALL set OFF");
+                        if (SHOW_IMAGES) {
+                            switch (pressureIndex_Heel) {
+                                case 0:
+                                    heelImages[0].setVisibility(View.VISIBLE);
+                                    break;
+                                case 1:
+                                    heelImages[1].setVisibility(View.VISIBLE);
+                                    break;
+                                case 2:
+                                    heelImages[2].setVisibility(View.VISIBLE);
+                                    break;
+                            }
+
+                            switch (pressureIndex_Left) {
+                                case 0:
+                                    leftSideImages[0].setVisibility(View.VISIBLE);
+                                    break;
+                                case 1:
+                                    leftSideImages[1].setVisibility(View.VISIBLE);
+                                    break;
+                                case 2:
+                                    leftSideImages[2].setVisibility(View.VISIBLE);
+                                    break;
+                            }
+
+                            switch (pressureIndex_RightBridge) {
+                                case 0:
+                                    rightBridgeImages[0].setVisibility(View.VISIBLE);
+                                    break;
+                                case 1:
+                                    rightBridgeImages[1].setVisibility(View.VISIBLE);
+                                    break;
+                                case 2:
+                                    rightBridgeImages[2].setVisibility(View.VISIBLE);
+                                    break;
+                            }
+
+                            switch (pressureIndex_Toe) {
+                                case 0:
+                                    toeImages[0].setVisibility(View.VISIBLE);
+                                    break;
+                                case 1:
+                                    toeImages[1].setVisibility(View.VISIBLE);
+                                    break;
+                                case 2:
+                                    toeImages[2].setVisibility(View.VISIBLE);
+                                    break;
+                            }
+                        }
+
                     }
 
                 }
@@ -390,42 +477,50 @@ public class FeedbackActivity extends Activity {
                         public void handleMessage(Message msg) {
                             switch (msg.what) {
                                 case RECEIVE_MESSAGE:
-                                    byte[] readBuf = (byte[]) msg.obj;
-                                    String readMessage = new String(readBuf, 0, msg.arg1);
-                                    String newReadMessage = new String();
+                                    byte[] readByte = (byte[]) msg.obj;
+                                    int identifier = (readByte[0] & 0xC0) >> 6;
+                                    int adcReading = readByte[0] & 0x2F;
 
-//                                    readMessage = readMessage.replaceAll("\\s+","");
+//                                    if (isExternalStorageWritable()) {
+//                                        String readMessage = new String(readByte, 0, msg.arg1);
+//                                        writeToSD("\nSTART\n" + readMessage + "\nEND\n");
+//                                    }
 
-                                    if (isExternalStorageWritable()) {
-                                        writeToSD("\nSTART\n" + readMessage + "\nEND\n");
+                                    switch (identifier) {
+                                        case 0:
+                                            if (adcReading > (HEEL_MODERATE+1)) pressureIndex_Heel = 2;
+                                            else if (adcReading < (HEEL_MODERATE-1)) pressureIndex_Heel = 0;
+                                            else pressureIndex_Heel = 1;
+
+                                            break;
+                                        case 1:
+                                            if (adcReading > (LEFT_MODERATE+1)) pressureIndex_Left = 2;
+                                            else if (adcReading < (LEFT_MODERATE-1)) pressureIndex_Left = 0;
+                                            else pressureIndex_Left = 1;
+
+                                            break;
+                                        case 2:
+                                            if (adcReading > (RIGHTBRIDGE_MODERATE+1)) pressureIndex_RightBridge = 2;
+                                            else if (adcReading < (RIGHTBRIDGE_MODERATE-1)) pressureIndex_RightBridge = 0;
+                                            else pressureIndex_RightBridge = 1;
+
+                                            break;
+                                        case 3:
+                                            if (adcReading > (TOE_MODERATE+1)) pressureIndex_Toe = 2;
+                                            else if (adcReading < (TOE_MODERATE-1)) pressureIndex_Toe = 0;
+                                            else pressureIndex_Toe = 1;
+
+                                            break;
                                     }
 
-
-//                                    if (readMessage.contains("SHL0")) {
-//                                        readMessage = readMessage.replaceAll("\\s+","");
-//
-//                                        if (isExternalStorageWritable()) {
-//                                            writeToSD("\nREADMESSAGE_START\n" + readMessage + "\nEND\n");
-//                                        }
-//
-//                                        if (readMessage.length() > (readMessage.indexOf("SHL0") + 50)) {
-//                                            newReadMessage = readMessage.substring(
-//                                                    readMessage.indexOf("SHL0"),
-//                                                    readMessage.indexOf("SHL0") + 50
-//                                            );
-
-                                            try {
-                                                text.setText(readMessage);
-                                            } catch (StringIndexOutOfBoundsException e) {
-                                                sb = new StringBuilder();
-                                                sb = sb.append(readMessage);
-                                                Log.i("BT_TEST: EXCEPTION ENCOUNTEHeavy PARSING DATA", sb.toString());
-                                                e.printStackTrace();
-                                            }
-
-//                                        }
-//                                    sb = sb.delete(0, sb.length()-1);
-
+//                                    try {
+//                                        text.setText(readMessage);
+//                                    } catch (StringIndexOutOfBoundsException e) {
+//                                        sb = new StringBuilder();
+//                                        sb = sb.append(readMessage);
+//                                        sb = sb.delete(0, sb.length()-1);
+//                                        Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
+//                                        e.printStackTrace();
 //                                    }
 
 
@@ -452,7 +547,6 @@ public class FeedbackActivity extends Activity {
             while (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
                 try {
                     bytes = inStream.read(buffer);
-//                    if (isExternalStorageWritable()) writeToSD("\nINSTREAM_START\n" + inStream.toString() + "\nEND\n");
                     mHandler.obtainMessage(RECEIVE_MESSAGE, bytes, -1, buffer).sendToTarget();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
