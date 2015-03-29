@@ -50,12 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/small_glow_moderate_left"
-        android:layout_below="@+id/rightBridgeModerate"
-        android:layout_toLeftOf="@+id/toeModerate"
-        android:layout_toStartOf="@+id/toeModerate"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="-5dp">
+        android:layout_alignTop="@+id/footBase"
+        android:layout_alignLeft="@+id/footBase"
+        android:layout_marginTop="145dp"
+        android:layout_marginLeft="105dp">
     </ImageView>
     <!-- MODERATE - HEEL -->
     <ImageView
@@ -64,64 +62,13 @@
         android:layout_height="wrap_content"
         android:background="@drawable/large_glow_moderate"
         android:layout_alignBottom="@+id/footBase"
-        android:layout_alignRight="@+id/toeModerate"
-        android:layout_alignEnd="@+id/toeModerate"
-        android:layout_marginBottom="10dp">
+        android:layout_alignRight="@+id/footBase"
+        android:layout_alignEnd="@+id/footBase"
+        android:layout_marginRight="125dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="15dp">
     </ImageView>
     <!-- END MODERATE MARKERS -->
-
-    <!-- START HEAVY MARKERS -->
-    <!-- HEAVY - TOE -->
-    <ImageView
-        android:id="@+id/toeHeavy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_heavy_toe"
-        android:layout_marginRight="125dp"
-        android:layout_marginEnd="105dp"
-        android:layout_alignTop="@+id/footBase"
-        android:layout_alignRight="@+id/footBase"
-        android:layout_alignEnd="@+id/footBase"
-        android:layout_marginTop="20dp">
-    </ImageView>
-    <!-- HEAVY - RIGHT BRIDGE -->
-    <ImageView
-        android:id="@+id/rightBridgeHeavy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_heavy_rightbridge"
-        android:layout_alignTop="@+id/footBase"
-        android:layout_alignRight="@+id/footBase"
-        android:layout_alignEnd="@+id/footBase"
-        android:layout_marginRight="115dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginTop="90dp">
-    </ImageView>
-    <!-- HEAVY - LEFT SIDE -->
-    <ImageView
-        android:id="@+id/leftSideHeavy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_heavy_left"
-        android:layout_below="@+id/rightBridgeHeavy"
-        android:layout_toLeftOf="@+id/toeHeavy"
-        android:layout_toStartOf="@+id/toeHeavy"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="-5dp">
-    </ImageView>
-    <!-- HEAVY - HEEL -->
-    <ImageView
-        android:id="@+id/heelHeavy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/large_glow_heavy"
-        android:layout_alignBottom="@+id/footBase"
-        android:layout_alignRight="@+id/toeHeavy"
-        android:layout_alignEnd="@+id/toeHeavy"
-        android:layout_marginBottom="10dp">
-    </ImageView>
-    <!-- END Heavy MARKERS -->
 
     <!-- START LIGHT MARKERS -->
     <!-- LIGHT - TOE -->
@@ -156,12 +103,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/small_glow_light_left"
-        android:layout_below="@+id/rightBridgeLight"
-        android:layout_toLeftOf="@+id/toeLight"
-        android:layout_toStartOf="@+id/toeLight"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="-5dp">
+        android:layout_alignTop="@+id/footBase"
+        android:layout_alignLeft="@+id/footBase"
+        android:layout_marginTop="145dp"
+        android:layout_marginLeft="105dp">
     </ImageView>
     <!-- LIGHT - HEEL -->
     <ImageView
@@ -170,11 +115,67 @@
         android:layout_height="wrap_content"
         android:background="@drawable/large_glow_light"
         android:layout_alignBottom="@+id/footBase"
-        android:layout_alignRight="@+id/toeLight"
-        android:layout_alignEnd="@+id/toeLight"
-        android:layout_marginBottom="10dp">
+        android:layout_alignRight="@+id/footBase"
+        android:layout_alignEnd="@+id/footBase"
+        android:layout_marginRight="125dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="15dp">
     </ImageView>
     <!-- END LIGHT MARKERS -->
+
+    <!-- START MODERATE MARKERS -->
+    <!-- MODERATE - TOE -->
+    <ImageView
+        android:id="@+id/toeHeavy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/small_glow_heavy_toe"
+        android:layout_marginRight="125dp"
+        android:layout_marginEnd="105dp"
+        android:layout_alignTop="@+id/footBase"
+        android:layout_alignRight="@+id/footBase"
+        android:layout_alignEnd="@+id/footBase"
+        android:layout_marginTop="20dp">
+    </ImageView>
+    <!-- MODERATE - RIGHT BRIDGE -->
+    <ImageView
+        android:id="@+id/rightBridgeHeavy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/small_glow_heavy_rightbridge"
+        android:layout_alignTop="@+id/footBase"
+        android:layout_alignRight="@+id/footBase"
+        android:layout_alignEnd="@+id/footBase"
+        android:layout_marginRight="115dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="90dp">
+    </ImageView>
+    <!-- MODERATE - LEFT SIDE -->
+    <ImageView
+        android:id="@+id/leftSideHeavy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/small_glow_heavy_left"
+        android:layout_alignTop="@+id/footBase"
+        android:layout_alignLeft="@+id/footBase"
+        android:layout_marginTop="145dp"
+        android:layout_marginLeft="105dp">
+    </ImageView>
+    <!-- MODERATE - HEEL -->
+    <ImageView
+        android:id="@+id/heelHeavy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/large_glow_heavy"
+        android:layout_alignBottom="@+id/footBase"
+        android:layout_alignRight="@+id/footBase"
+        android:layout_alignEnd="@+id/footBase"
+        android:layout_marginRight="125dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="15dp">
+    </ImageView>
+    <!-- END MODERATE MARKERS -->
+
 
 
     <TextView

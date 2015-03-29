@@ -88,7 +88,11 @@ public class FeedbackActivity extends Activity {
         mainLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                index = (index+1) % 3;
+                if (DEBUG_TEST_MODE) {
+                    index = (index + 1) % 3;
+                } else {
+                    index = (index + 1) % 4;
+                }
                 Log.i("BT_TEST", "index val set to " + index);
             }
         });
@@ -234,6 +238,22 @@ public class FeedbackActivity extends Activity {
                         SHOW_IMAGES = false;
                         onProgressUpdate();
                         Thread.sleep(500);
+
+                        switch (index) {
+                            case 0:
+                                pressureIndex_Heel = (pressureIndex_Heel+1) % 3;
+                                break;
+                            case 1:
+                                pressureIndex_Left = (pressureIndex_Left+1) % 3;
+                                break;
+                            case 2:
+                                pressureIndex_RightBridge = (pressureIndex_RightBridge+1) % 3;
+                                break;
+                            case 3:
+                                pressureIndex_Toe = (pressureIndex_Toe+1) % 3;
+                                break;
+                        }
+
                     }
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
@@ -336,53 +356,10 @@ public class FeedbackActivity extends Activity {
                         heelImages[2].setVisibility(View.GONE);
 
                         if (SHOW_IMAGES) {
-                            switch (pressureIndex_Heel) {
-                                case 0:
-                                    heelImages[0].setVisibility(View.VISIBLE);
-                                    break;
-                                case 1:
-                                    heelImages[1].setVisibility(View.VISIBLE);
-                                    break;
-                                case 2:
-                                    heelImages[2].setVisibility(View.VISIBLE);
-                                    break;
-                            }
-
-                            switch (pressureIndex_Left) {
-                                case 0:
-                                    leftSideImages[0].setVisibility(View.VISIBLE);
-                                    break;
-                                case 1:
-                                    leftSideImages[1].setVisibility(View.VISIBLE);
-                                    break;
-                                case 2:
-                                    leftSideImages[2].setVisibility(View.VISIBLE);
-                                    break;
-                            }
-
-                            switch (pressureIndex_RightBridge) {
-                                case 0:
-                                    rightBridgeImages[0].setVisibility(View.VISIBLE);
-                                    break;
-                                case 1:
-                                    rightBridgeImages[1].setVisibility(View.VISIBLE);
-                                    break;
-                                case 2:
-                                    rightBridgeImages[2].setVisibility(View.VISIBLE);
-                                    break;
-                            }
-
-                            switch (pressureIndex_Toe) {
-                                case 0:
-                                    toeImages[0].setVisibility(View.VISIBLE);
-                                    break;
-                                case 1:
-                                    toeImages[1].setVisibility(View.VISIBLE);
-                                    break;
-                                case 2:
-                                    toeImages[2].setVisibility(View.VISIBLE);
-                                    break;
-                            }
+                            heelImages[pressureIndex_Heel].setVisibility(View.VISIBLE);
+                            leftSideImages[pressureIndex_Left].setVisibility(View.VISIBLE);
+                            rightBridgeImages[pressureIndex_RightBridge].setVisibility(View.VISIBLE);
+                            toeImages[pressureIndex_Toe].setVisibility(View.VISIBLE);
                         }
 
                     }
