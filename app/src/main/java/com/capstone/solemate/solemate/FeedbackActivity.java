@@ -91,13 +91,13 @@ public class FeedbackActivity extends Activity {
         /*
          * RED GLOWS
          */
-        imageToeRed = (ImageView) findViewById(R.id.toeBlue);
+        imageToeRed = (ImageView) findViewById(R.id.toeRed);
         imageToeRed.setVisibility(View.GONE);
-        imageRightBridgeRed = (ImageView) findViewById(R.id.rightBridgeBlue);
+        imageRightBridgeRed = (ImageView) findViewById(R.id.rightBridgeRed);
         imageRightBridgeRed.setVisibility(View.GONE);
-        imageLeftSideRed = (ImageView) findViewById(R.id.leftSideBlue);
+        imageLeftSideRed = (ImageView) findViewById(R.id.leftSideRed);
         imageLeftSideRed.setVisibility(View.GONE);
-        imageHeelRed = (ImageView) findViewById(R.id.heelBlue);
+        imageHeelRed = (ImageView) findViewById(R.id.heelRed);
         imageHeelRed.setVisibility(View.GONE);
 
         /*
