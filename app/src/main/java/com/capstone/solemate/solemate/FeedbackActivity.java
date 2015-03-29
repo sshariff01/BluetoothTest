@@ -47,19 +47,19 @@ public class FeedbackActivity extends Activity {
     protected static TextView text;
 
     protected static ImageView imageFootBase;
-    protected static ImageView imageToeBlue,
-            imageRightBridgeBlue,
-            imageLeftSideBlue,
-            imageHeelBlue;
+    protected static ImageView imageToeModerate,
+            imageRightBridgeModerate,
+            imageLeftSideModerate,
+            imageHeelModerate;
     protected static ImageView
-            imageToeRed,
-            imageRightBridgeRed,
-            imageLeftSideRed,
-            imageHeelRed;
-    protected static ImageView imageToeYellow,
-            imageRightBridgeYellow,
-            imageLeftSideYellow,
-            imageHeelYellow;
+            imageToeHeavy,
+            imageRightBridgeHeavy,
+            imageLeftSideHeavy,
+            imageHeelHeavy;
+    protected static ImageView imageToeLight,
+            imageRightBridgeLight,
+            imageLeftSideLight,
+            imageHeelLight;
 
     // Loading spinner
     public ProgressDialog progress;
@@ -89,40 +89,40 @@ public class FeedbackActivity extends Activity {
         hc05MacId = intent.getStringExtra("hc05MacId");
 
         /*
-         * YELLOW GLOWS
+         * Light GLOWS
          */
-        imageToeYellow = (ImageView) findViewById(R.id.toeYellow);
-        imageToeYellow.setVisibility(View.GONE);
-        imageRightBridgeYellow = (ImageView) findViewById(R.id.rightBridgeYellow);
-        imageRightBridgeYellow.setVisibility(View.GONE);
-        imageLeftSideYellow = (ImageView) findViewById(R.id.leftSideYellow);
-        imageLeftSideYellow.setVisibility(View.GONE);
-        imageHeelYellow = (ImageView) findViewById(R.id.heelYellow);
-        imageHeelYellow.setVisibility(View.GONE);
+        imageToeLight = (ImageView) findViewById(R.id.toeLight);
+        imageToeLight.setVisibility(View.GONE);
+        imageRightBridgeLight = (ImageView) findViewById(R.id.rightBridgeLight);
+        imageRightBridgeLight.setVisibility(View.GONE);
+        imageLeftSideLight = (ImageView) findViewById(R.id.leftSideLight);
+        imageLeftSideLight.setVisibility(View.GONE);
+        imageHeelLight = (ImageView) findViewById(R.id.heelLight);
+        imageHeelLight.setVisibility(View.GONE);
 
         /*
-         * RED GLOWS
+         * Heavy GLOWS
          */
-        imageToeRed = (ImageView) findViewById(R.id.toeRed);
-        imageToeRed.setVisibility(View.GONE);
-        imageRightBridgeRed = (ImageView) findViewById(R.id.rightBridgeRed);
-        imageRightBridgeRed.setVisibility(View.GONE);
-        imageLeftSideRed = (ImageView) findViewById(R.id.leftSideRed);
-        imageLeftSideRed.setVisibility(View.GONE);
-        imageHeelRed = (ImageView) findViewById(R.id.heelRed);
-        imageHeelRed.setVisibility(View.GONE);
+        imageToeHeavy = (ImageView) findViewById(R.id.toeHeavy);
+        imageToeHeavy.setVisibility(View.GONE);
+        imageRightBridgeHeavy = (ImageView) findViewById(R.id.rightBridgeHeavy);
+        imageRightBridgeHeavy.setVisibility(View.GONE);
+        imageLeftSideHeavy = (ImageView) findViewById(R.id.leftSideHeavy);
+        imageLeftSideHeavy.setVisibility(View.GONE);
+        imageHeelHeavy = (ImageView) findViewById(R.id.heelHeavy);
+        imageHeelHeavy.setVisibility(View.GONE);
 
         /*
-         * BLUE GLOWS
+         * Moderate GLOWS
          */
-        imageToeBlue = (ImageView) findViewById(R.id.toeBlue);
-        imageToeBlue.setVisibility(View.GONE);
-        imageRightBridgeBlue = (ImageView) findViewById(R.id.rightBridgeBlue);
-        imageRightBridgeBlue.setVisibility(View.GONE);
-        imageLeftSideBlue = (ImageView) findViewById(R.id.leftSideBlue);
-        imageLeftSideBlue.setVisibility(View.GONE);
-        imageHeelBlue = (ImageView) findViewById(R.id.heelBlue);
-        imageHeelBlue.setVisibility(View.GONE);
+        imageToeModerate = (ImageView) findViewById(R.id.toeModerate);
+        imageToeModerate.setVisibility(View.GONE);
+        imageRightBridgeModerate = (ImageView) findViewById(R.id.rightBridgeModerate);
+        imageRightBridgeModerate.setVisibility(View.GONE);
+        imageLeftSideModerate = (ImageView) findViewById(R.id.leftSideModerate);
+        imageLeftSideModerate.setVisibility(View.GONE);
+        imageHeelModerate = (ImageView) findViewById(R.id.heelModerate);
+        imageHeelModerate.setVisibility(View.GONE);
 
         /*
          * BASE FOOT IMAGE
@@ -225,71 +225,71 @@ public class FeedbackActivity extends Activity {
                 @Override
                 public void run() {
                     if (value == 0) {
-                        imageToeYellow.setVisibility(View.GONE);
-                        imageRightBridgeYellow.setVisibility(View.GONE);
-                        imageLeftSideYellow.setVisibility(View.GONE);
-                        imageHeelYellow.setVisibility(View.GONE);
+                        imageToeLight.setVisibility(View.GONE);
+                        imageRightBridgeLight.setVisibility(View.GONE);
+                        imageLeftSideLight.setVisibility(View.GONE);
+                        imageHeelLight.setVisibility(View.GONE);
 
-                        imageToeRed.setVisibility(View.GONE);
-                        imageRightBridgeRed.setVisibility(View.GONE);
-                        imageLeftSideRed.setVisibility(View.GONE);
-                        imageHeelRed.setVisibility(View.GONE);
+                        imageToeHeavy.setVisibility(View.GONE);
+                        imageRightBridgeHeavy.setVisibility(View.GONE);
+                        imageLeftSideHeavy.setVisibility(View.GONE);
+                        imageHeelHeavy.setVisibility(View.GONE);
 
-                        imageToeBlue.setVisibility(View.VISIBLE);
-                        imageRightBridgeBlue.setVisibility(View.VISIBLE);
-                        imageLeftSideBlue.setVisibility(View.VISIBLE);
-                        imageHeelBlue.setVisibility(View.VISIBLE);
+                        imageToeModerate.setVisibility(View.VISIBLE);
+                        imageRightBridgeModerate.setVisibility(View.VISIBLE);
+                        imageLeftSideModerate.setVisibility(View.VISIBLE);
+                        imageHeelModerate.setVisibility(View.VISIBLE);
 
-                        Log.i("BT_TEST", "BLUE set ON");
+                        Log.i("BT_TEST", "Moderate set ON");
                     } else if (value == 1) {
-                        imageToeYellow.setVisibility(View.GONE);
-                        imageRightBridgeYellow.setVisibility(View.GONE);
-                        imageLeftSideYellow.setVisibility(View.GONE);
-                        imageHeelYellow.setVisibility(View.GONE);
+                        imageToeLight.setVisibility(View.GONE);
+                        imageRightBridgeLight.setVisibility(View.GONE);
+                        imageLeftSideLight.setVisibility(View.GONE);
+                        imageHeelLight.setVisibility(View.GONE);
 
-                        imageToeRed.setVisibility(View.VISIBLE);
-                        imageRightBridgeRed.setVisibility(View.VISIBLE);
-                        imageLeftSideRed.setVisibility(View.VISIBLE);
-                        imageHeelRed.setVisibility(View.VISIBLE);
+                        imageToeHeavy.setVisibility(View.VISIBLE);
+                        imageRightBridgeHeavy.setVisibility(View.VISIBLE);
+                        imageLeftSideHeavy.setVisibility(View.VISIBLE);
+                        imageHeelHeavy.setVisibility(View.VISIBLE);
 
-                        imageToeBlue.setVisibility(View.GONE);
-                        imageRightBridgeBlue.setVisibility(View.GONE);
-                        imageLeftSideBlue.setVisibility(View.GONE);
-                        imageHeelBlue.setVisibility(View.GONE);
+                        imageToeModerate.setVisibility(View.GONE);
+                        imageRightBridgeModerate.setVisibility(View.GONE);
+                        imageLeftSideModerate.setVisibility(View.GONE);
+                        imageHeelModerate.setVisibility(View.GONE);
 
-                        Log.i("BT_TEST", "RED set ON");
+                        Log.i("BT_TEST", "Heavy set ON");
                     } else if (value == 2) {
-                        imageToeYellow.setVisibility(View.VISIBLE);
-                        imageRightBridgeYellow.setVisibility(View.VISIBLE);
-                        imageLeftSideYellow.setVisibility(View.VISIBLE);
-                        imageHeelYellow.setVisibility(View.VISIBLE);
+                        imageToeLight.setVisibility(View.VISIBLE);
+                        imageRightBridgeLight.setVisibility(View.VISIBLE);
+                        imageLeftSideLight.setVisibility(View.VISIBLE);
+                        imageHeelLight.setVisibility(View.VISIBLE);
 
-                        imageToeRed.setVisibility(View.GONE);
-                        imageRightBridgeRed.setVisibility(View.GONE);
-                        imageLeftSideRed.setVisibility(View.GONE);
-                        imageHeelRed.setVisibility(View.GONE);
+                        imageToeHeavy.setVisibility(View.GONE);
+                        imageRightBridgeHeavy.setVisibility(View.GONE);
+                        imageLeftSideHeavy.setVisibility(View.GONE);
+                        imageHeelHeavy.setVisibility(View.GONE);
 
-                        imageToeBlue.setVisibility(View.GONE);
-                        imageRightBridgeBlue.setVisibility(View.GONE);
-                        imageLeftSideBlue.setVisibility(View.GONE);
-                        imageHeelBlue.setVisibility(View.GONE);
+                        imageToeModerate.setVisibility(View.GONE);
+                        imageRightBridgeModerate.setVisibility(View.GONE);
+                        imageLeftSideModerate.setVisibility(View.GONE);
+                        imageHeelModerate.setVisibility(View.GONE);
 
-                        Log.i("BT_TEST", "YELLOW set ON");
+                        Log.i("BT_TEST", "Light set ON");
                     } else {
-                        imageToeYellow.setVisibility(View.GONE);
-                        imageRightBridgeYellow.setVisibility(View.GONE);
-                        imageLeftSideYellow.setVisibility(View.GONE);
-                        imageHeelYellow.setVisibility(View.GONE);
+                        imageToeLight.setVisibility(View.GONE);
+                        imageRightBridgeLight.setVisibility(View.GONE);
+                        imageLeftSideLight.setVisibility(View.GONE);
+                        imageHeelLight.setVisibility(View.GONE);
 
-                        imageToeRed.setVisibility(View.GONE);
-                        imageRightBridgeRed.setVisibility(View.GONE);
-                        imageLeftSideRed.setVisibility(View.GONE);
-                        imageHeelRed.setVisibility(View.GONE);
+                        imageToeHeavy.setVisibility(View.GONE);
+                        imageRightBridgeHeavy.setVisibility(View.GONE);
+                        imageLeftSideHeavy.setVisibility(View.GONE);
+                        imageHeelHeavy.setVisibility(View.GONE);
 
-                        imageToeBlue.setVisibility(View.GONE);
-                        imageRightBridgeBlue.setVisibility(View.GONE);
-                        imageLeftSideBlue.setVisibility(View.GONE);
-                        imageHeelBlue.setVisibility(View.GONE);
+                        imageToeModerate.setVisibility(View.GONE);
+                        imageRightBridgeModerate.setVisibility(View.GONE);
+                        imageLeftSideModerate.setVisibility(View.GONE);
+                        imageHeelModerate.setVisibility(View.GONE);
 
                         Log.i("BT_TEST", "ALL set OFF");
                     }
@@ -413,7 +413,7 @@ public class FeedbackActivity extends Activity {
                                             } catch (StringIndexOutOfBoundsException e) {
                                                 sb = new StringBuilder();
                                                 sb = sb.append(readMessage);
-                                                Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
+                                                Log.i("BT_TEST: EXCEPTION ENCOUNTEHeavy PARSING DATA", sb.toString());
                                                 e.printStackTrace();
                                             }
 

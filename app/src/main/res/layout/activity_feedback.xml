@@ -17,13 +17,13 @@
         android:background="@drawable/foot_mri_right" >
     </ImageView>
 
-    <!-- START BLUE MARKERS -->
-    <!-- BLUE - TOE -->
+    <!-- START MODERATE MARKERS -->
+    <!-- MODERATE - TOE -->
     <ImageView
-        android:id="@+id/toeBlue"
+        android:id="@+id/toeModerate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_blue_toe"
+        android:background="@drawable/small_glow_moderate_toe"
         android:layout_marginRight="125dp"
         android:layout_marginEnd="105dp"
         android:layout_alignTop="@+id/footBase"
@@ -31,12 +31,12 @@
         android:layout_alignEnd="@+id/footBase"
         android:layout_marginTop="20dp">
     </ImageView>
-    <!-- BLUE - RIGHT BRIDGE -->
+    <!-- MODERATE - RIGHT BRIDGE -->
     <ImageView
-        android:id="@+id/rightBridgeBlue"
+        android:id="@+id/rightBridgeModerate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_blue_rightbridge"
+        android:background="@drawable/small_glow_moderate_rightbridge"
         android:layout_alignTop="@+id/footBase"
         android:layout_alignRight="@+id/footBase"
         android:layout_alignEnd="@+id/footBase"
@@ -44,39 +44,39 @@
         android:layout_marginEnd="0dp"
         android:layout_marginTop="90dp">
     </ImageView>
-    <!-- BLUE - LEFT SIDE -->
+    <!-- MODERATE - LEFT SIDE -->
     <ImageView
-        android:id="@+id/leftSideBlue"
+        android:id="@+id/leftSideModerate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_blue_left"
-        android:layout_below="@+id/rightBridgeBlue"
-        android:layout_toLeftOf="@+id/toeBlue"
-        android:layout_toStartOf="@+id/toeBlue"
+        android:background="@drawable/small_glow_moderate_left"
+        android:layout_below="@+id/rightBridgeModerate"
+        android:layout_toLeftOf="@+id/toeModerate"
+        android:layout_toStartOf="@+id/toeModerate"
         android:layout_marginRight="15dp"
         android:layout_marginEnd="45dp"
         android:layout_marginTop="-5dp">
     </ImageView>
-    <!-- BLUE - HEEL -->
+    <!-- MODERATE - HEEL -->
     <ImageView
-        android:id="@+id/heelBlue"
+        android:id="@+id/heelModerate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/large_glow_blue"
+        android:background="@drawable/large_glow_moderate"
         android:layout_alignBottom="@+id/footBase"
-        android:layout_alignRight="@+id/toeBlue"
-        android:layout_alignEnd="@+id/toeBlue"
+        android:layout_alignRight="@+id/toeModerate"
+        android:layout_alignEnd="@+id/toeModerate"
         android:layout_marginBottom="10dp">
     </ImageView>
-    <!-- END BLUE MARKERS -->
+    <!-- END MODERATE MARKERS -->
 
-    <!-- START RED MARKERS -->
-    <!-- RED - TOE -->
+    <!-- START HEAVY MARKERS -->
+    <!-- HEAVY - TOE -->
     <ImageView
-        android:id="@+id/toeRed"
+        android:id="@+id/toeHeavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_red_toe"
+        android:background="@drawable/small_glow_heavy_toe"
         android:layout_marginRight="125dp"
         android:layout_marginEnd="105dp"
         android:layout_alignTop="@+id/footBase"
@@ -84,12 +84,12 @@
         android:layout_alignEnd="@+id/footBase"
         android:layout_marginTop="20dp">
     </ImageView>
-    <!-- RED - RIGHT BRIDGE -->
+    <!-- HEAVY - RIGHT BRIDGE -->
     <ImageView
-        android:id="@+id/rightBridgeRed"
+        android:id="@+id/rightBridgeHeavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_red_rightbridge"
+        android:background="@drawable/small_glow_heavy_rightbridge"
         android:layout_alignTop="@+id/footBase"
         android:layout_alignRight="@+id/footBase"
         android:layout_alignEnd="@+id/footBase"
@@ -97,39 +97,39 @@
         android:layout_marginEnd="0dp"
         android:layout_marginTop="90dp">
     </ImageView>
-    <!-- RED - LEFT SIDE -->
+    <!-- HEAVY - LEFT SIDE -->
     <ImageView
-        android:id="@+id/leftSideRed"
+        android:id="@+id/leftSideHeavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_red_left"
-        android:layout_below="@+id/rightBridgeRed"
-        android:layout_toLeftOf="@+id/toeRed"
-        android:layout_toStartOf="@+id/toeRed"
+        android:background="@drawable/small_glow_heavy_left"
+        android:layout_below="@+id/rightBridgeHeavy"
+        android:layout_toLeftOf="@+id/toeHeavy"
+        android:layout_toStartOf="@+id/toeHeavy"
         android:layout_marginRight="15dp"
         android:layout_marginEnd="45dp"
         android:layout_marginTop="-5dp">
     </ImageView>
-    <!-- RED - HEEL -->
+    <!-- HEAVY - HEEL -->
     <ImageView
-        android:id="@+id/heelRed"
+        android:id="@+id/heelHeavy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/large_glow_red"
+        android:background="@drawable/large_glow_heavy"
         android:layout_alignBottom="@+id/footBase"
-        android:layout_alignRight="@+id/toeRed"
-        android:layout_alignEnd="@+id/toeRed"
+        android:layout_alignRight="@+id/toeHeavy"
+        android:layout_alignEnd="@+id/toeHeavy"
         android:layout_marginBottom="10dp">
     </ImageView>
-    <!-- END RED MARKERS -->
+    <!-- END Heavy MARKERS -->
 
-    <!-- START YELLOW MARKERS -->
-    <!-- YELLOW - TOE -->
+    <!-- START LIGHT MARKERS -->
+    <!-- LIGHT - TOE -->
     <ImageView
-        android:id="@+id/toeYellow"
+        android:id="@+id/toeLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_yellow_toe"
+        android:background="@drawable/small_glow_light_toe"
         android:layout_marginRight="125dp"
         android:layout_marginEnd="105dp"
         android:layout_alignTop="@+id/footBase"
@@ -137,12 +137,12 @@
         android:layout_alignEnd="@+id/footBase"
         android:layout_marginTop="20dp">
     </ImageView>
-    <!-- YELLOW - RIGHT BRIDGE -->
+    <!-- LIGHT - RIGHT BRIDGE -->
     <ImageView
-        android:id="@+id/rightBridgeYellow"
+        android:id="@+id/rightBridgeLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_yellow_rightbridge"
+        android:background="@drawable/small_glow_light_rightbridge"
         android:layout_alignTop="@+id/footBase"
         android:layout_alignRight="@+id/footBase"
         android:layout_alignEnd="@+id/footBase"
@@ -150,31 +150,31 @@
         android:layout_marginEnd="0dp"
         android:layout_marginTop="90dp">
     </ImageView>
-    <!-- YELLOW - LEFT SIDE -->
+    <!-- LIGHT - LEFT SIDE -->
     <ImageView
-        android:id="@+id/leftSideYellow"
+        android:id="@+id/leftSideLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/small_glow_yellow_left"
-        android:layout_below="@+id/rightBridgeYellow"
-        android:layout_toLeftOf="@+id/toeYellow"
-        android:layout_toStartOf="@+id/toeYellow"
+        android:background="@drawable/small_glow_light_left"
+        android:layout_below="@+id/rightBridgeLight"
+        android:layout_toLeftOf="@+id/toeLight"
+        android:layout_toStartOf="@+id/toeLight"
         android:layout_marginRight="15dp"
         android:layout_marginEnd="45dp"
         android:layout_marginTop="-5dp">
     </ImageView>
-    <!-- YELLOW - HEEL -->
+    <!-- LIGHT - HEEL -->
     <ImageView
-        android:id="@+id/heelYellow"
+        android:id="@+id/heelLight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/large_glow_yellow"
+        android:background="@drawable/large_glow_light"
         android:layout_alignBottom="@+id/footBase"
-        android:layout_alignRight="@+id/toeYellow"
-        android:layout_alignEnd="@+id/toeYellow"
+        android:layout_alignRight="@+id/toeLight"
+        android:layout_alignEnd="@+id/toeLight"
         android:layout_marginBottom="10dp">
     </ImageView>
-    <!-- END YELLOW MARKERS -->
+    <!-- END LIGHT MARKERS -->
 
 
     <TextView
