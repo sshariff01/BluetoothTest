@@ -77,7 +77,7 @@ public class FeedbackActivity extends Activity {
     public static int index = 0;
 
     // Set to false when going in production!
-    public static boolean DEBUG_TEST_MODE = false;
+    public static boolean DEBUG_TEST_MODE = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,11 +166,13 @@ public class FeedbackActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()) {
+            case R.id.action_about:
+                return true;
+            case R.id.action_settings:
+                return true;
+            case R.id.action_statistics:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
