@@ -79,6 +79,8 @@ public class FeedbackActivity extends Activity {
     public static int index;
 
     public static int numSteps;
+    public static boolean STEP_UP = true, STEP_DOWN = false;
+    protected static int MAX_PRESSURE_VAL = 64;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,8 +249,6 @@ public class FeedbackActivity extends Activity {
                         value = 3;
                         onProgressUpdate();
                         Thread.sleep(500);
-                        numSteps++;
-                        Log.i("BT_TEST", "Number of Steps Taken: " + numSteps);
                     } else {
                         SHOW_IMAGES = true;
                         onProgressUpdate();
@@ -478,10 +478,10 @@ public class FeedbackActivity extends Activity {
                                 case RECEIVE_MESSAGE:
                                     byte[] readByte = (byte[]) msg.obj;
                                     int identifier = (readByte[0] & 0xC0) >> 6;
-                                    int adcReading = readByte[0] & 0x2F;
+                                    int adcReading = readByte[0] & 0x3F; // 0x3F = 0011 1111
 
 //                                    char readMessage = new String(readByte, 0, msg.arg1).toCharArray()[0];
-                                    int readMessage = readByte[0];
+//                                    int readMessage = readByte[0];
 
                                     switch (identifier) {
                                         case 0:
@@ -489,14 +489,14 @@ public class FeedbackActivity extends Activity {
                                             else if (adcReading < (HEEL_MODERATE-1)) pressureIndex_Heel = 0;
                                             else pressureIndex_Heel = 1;
 
-                                            if (isExternalStorageWritable()) {
-                                                writeToSD("HEEL: " + readMessage + "\n");
-                                            }
+//                                            if (isExternalStorageWritable()) {
+//                                                writeToSD("HEEL: " + adcReading + "\n");
+//                                            }
                                             try {
-                                                text.setText("HEEL: " + String.valueOf(readMessage) + "\n");
+                                                text.setText("HEEL: " + String.valueOf(adcReading) + "\n");
                                             } catch (Exception e) {
                                                 sb = new StringBuilder();
-                                                sb = sb.append(readMessage);
+                                                sb = sb.append(adcReading);
                                                 sb = sb.delete(0, sb.length()-1);
                                                 Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
                                                 e.printStackTrace();
@@ -508,14 +508,56 @@ public class FeedbackActivity extends Activity {
                                             else if (adcReading < (LEFT_MODERATE-1)) pressureIndex_Left = 0;
                                             else pressureIndex_Left = 1;
 
-                                            if (isExternalStorageWritable()) {
-                                                writeToSD("LEFT: " + readMessage + "\n");
-                                            }
+//                                            if (isExternalStorageWritable()) {
+//                                                writeToSD("LEFT: " + adcReading + "\n");
+//                                            }
                                             try {
-                                                text.setText("LEFT: " + String.valueOf(readMessage) + "\n");
+                                                text.setText("LEFT: " + String.valueOf(adcReading) + "\n");
                                             } catch (Exception e) {
                                                 sb = new StringBuilder();
-                                                sb = sb.append(readMessage);
+                                                sb = sb.append(adcReading);
+                                                sb = sb.delete(0, sb.length()-1);
+                                                Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
+                                                e.printStackTrace();
+                                            }
+
+                                            /*
+                                            * STEP COUNTER ALGORITHM
+                                            */
+                                            if (!STEP_DOWN && STEP_UP) {
+                                                if (
+                                                        (adcReading > MAX_PRESSURE_VAL-15)
+                                                                && (adcReading <= MAX_PRESSURE_VAL)
+                                                        ) {
+                                                    STEP_DOWN = true;
+                                                    STEP_UP = false;
+                                                    numSteps++;
+                                                    Log.i("BT_TEST", "Number of Steps Taken: " + numSteps);
+                                                }
+                                            } else {
+                                                STEP_DOWN = false;
+                                            }
+                                            if (
+                                                    (adcReading >= 0)
+                                                            && (adcReading < 15)
+                                                    ) {
+                                                STEP_UP = true;
+                                            }
+
+                                            break;
+                                        case 3:
+                                            if (adcReading > (RIGHTBRIDGE_MODERATE+1)) pressureIndex_RightBridge = 2;
+                                            else if (adcReading < (RIGHTBRIDGE_MODERATE-1)) pressureIndex_RightBridge = 0;
+                                            else pressureIndex_RightBridge = 1;
+
+//                                            if (isExternalStorageWritable()) {
+//                                                writeToSD("RIGHT: " + adcReading + "\n");
+//                                            }
+                                            try {
+                                                text.setText("RIGHT: " + String.valueOf(adcReading) + "\n");
+                                            } catch (Exception e) {
+                                                sb = new StringBuilder();
+                                                sb = sb.append(adcReading);
                                                 sb = sb.delete(0, sb.length()-1);
                                                 Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
                                                 e.printStackTrace();
@@ -523,37 +565,18 @@ public class FeedbackActivity extends Activity {
 
                                             break;
                                         case 2:
-                                            if (adcReading > (RIGHTBRIDGE_MODERATE+1)) pressureIndex_RightBridge = 2;
-                                            else if (adcReading < (RIGHTBRIDGE_MODERATE-1)) pressureIndex_RightBridge = 0;
-                                            else pressureIndex_RightBridge = 1;
-
-                                            if (isExternalStorageWritable()) {
-                                                writeToSD("RIGHT: " + readMessage + "\n");
-                                            }
-                                            try {
-                                                text.setText("RIGHT: " + String.valueOf(readMessage) + "\n");
-                                            } catch (Exception e) {
-                                                sb = new StringBuilder();
-                                                sb = sb.append(readMessage);
-                                                sb = sb.delete(0, sb.length()-1);
-                                                Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
-                                                e.printStackTrace();
-                                            }
-
-                                            break;
-                                        case 3:
                                             if (adcReading > (TOE_MODERATE+1)) pressureIndex_Toe = 2;
                                             else if (adcReading < (TOE_MODERATE-1)) pressureIndex_Toe = 0;
                                             else pressureIndex_Toe = 1;
 
-                                            if (isExternalStorageWritable()) {
-                                                writeToSD("TOE: " + readMessage + "\n");
-                                            }
+//                                            if (isExternalStorageWritable()) {
+//                                                writeToSD("TOE: " + adcReading + "\n");
+//                                            }
                                             try {
-                                                text.setText("TOE: " + String.valueOf(readMessage) + "\n");
+                                                text.setText("TOE: " + String.valueOf(adcReading) + "\n");
                                             } catch (Exception e) {
                                                 sb = new StringBuilder();
-                                                sb = sb.append(readMessage);
+                                                sb = sb.append(adcReading);
                                                 sb = sb.delete(0, sb.length()-1);
                                                 Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
                                                 e.printStackTrace();
