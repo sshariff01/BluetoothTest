@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class StatisticsActivity extends Activity {
+    private StepCountThread mStepCountThread;
+    protected static TextView stepCountText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,8 +17,13 @@ public class StatisticsActivity extends Activity {
         // Up navigation
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_statistics);
-    }
 
+        stepCountText = (TextView) findViewById(R.id.stepsTaken);
+
+        // Create thread to update step count
+        mStepCountThread = new StepCountThread();
+        mStepCountThread.start();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -33,7 +41,6 @@ public class StatisticsActivity extends Activity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-//                NavUtils.navigateUpFromSameTask(this);
                 finish();
                 return true;
             case R.id.action_settings:
@@ -41,5 +48,29 @@ public class StatisticsActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * ASYNC TASKS AND OTHER THREADS
+     */
+    private class StepCountThread extends Thread {
+
+        public StepCountThread() { }
+
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
+                    }
+                });
+            }
+        }
     }
 }

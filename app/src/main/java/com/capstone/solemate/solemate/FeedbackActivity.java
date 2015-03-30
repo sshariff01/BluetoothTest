@@ -74,10 +74,11 @@ public class FeedbackActivity extends Activity {
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    public static int index;
-
     // Set to false when going in production!
     public static boolean DEBUG_TEST_MODE = true;
+    public static int index;
+
+    public static int numSteps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +144,8 @@ public class FeedbackActivity extends Activity {
          * BASE FOOT IMAGE
          */
         imageFootBase = (ImageView) findViewById(R.id.footBase);
+
+        numSteps = 0;
 
         new ImageFlipperTask().execute();
 
@@ -246,6 +249,8 @@ public class FeedbackActivity extends Activity {
                         value = 3;
                         onProgressUpdate();
                         Thread.sleep(500);
+                        numSteps++;
+                        Log.i("BT_TEST", "Number of Steps Taken: " + numSteps);
                     } else {
                         SHOW_IMAGES = true;
                         onProgressUpdate();
