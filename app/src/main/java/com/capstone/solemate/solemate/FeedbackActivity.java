@@ -172,7 +172,10 @@ public class FeedbackActivity extends Activity {
             case R.id.action_settings:
                 return true;
             case R.id.action_statistics:
-                return true;
+                // Launch statistics activity
+                Intent myIntent = new Intent(FeedbackActivity.this, StatisticsActivity.class);
+                FeedbackActivity.this.startActivity(myIntent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
