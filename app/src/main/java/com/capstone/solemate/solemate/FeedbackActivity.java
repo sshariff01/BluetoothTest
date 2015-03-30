@@ -74,7 +74,7 @@ public class FeedbackActivity extends Activity {
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    public static int index = 0;
+    public static int index;
 
     // Set to false when going in production!
     public static boolean DEBUG_TEST_MODE = true;
@@ -83,6 +83,7 @@ public class FeedbackActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+        index = 0;
 
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
         mainLayout.setOnClickListener(new OnClickListener() {
