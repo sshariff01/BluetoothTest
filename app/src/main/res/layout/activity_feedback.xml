@@ -184,6 +184,33 @@
         android:id="@+id/helloworld"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Step Count"
+        android:id="@+id/stepCount"
+        android:textColor="#FFFFFF"
+        android:textSize="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=""
+        android:id="@+id/stepsCountVal"
+        android:textColor="#FFFFFF"
+        android:textSize="42dp"
+        android:layout_below="@+id/stepCount"
+        android:layout_alignRight="@+id/stepCount"
+        android:layout_marginTop="5dp" />
 
 </RelativeLayout>

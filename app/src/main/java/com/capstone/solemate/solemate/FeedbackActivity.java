@@ -45,6 +45,7 @@ public class FeedbackActivity extends Activity {
     private static String hc05MacId = new String();
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     protected static TextView text;
+    protected static TextView stepCount;
 
     protected static int HEEL_MODERATE, LEFT_MODERATE, RIGHTBRIDGE_MODERATE, TOE_MODERATE;
 
@@ -81,6 +82,7 @@ public class FeedbackActivity extends Activity {
     public static int numSteps;
     public static boolean STEP_UP = true, STEP_DOWN = false;
     protected static int MAX_PRESSURE_VAL = 64;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +150,8 @@ public class FeedbackActivity extends Activity {
         imageFootBase = (ImageView) findViewById(R.id.footBase);
 
         numSteps = 0;
+        stepCount = (TextView) findViewById(R.id.stepsCountVal);
+        stepCount.setText(String.valueOf(numSteps));
 
         // Init loading spinner
         progress = new ProgressDialog(this);
@@ -561,6 +565,7 @@ public class FeedbackActivity extends Activity {
                                                     STEP_DOWN = true;
                                                     STEP_UP = false;
                                                     numSteps++;
+                                                    stepCount.setText(String.valueOf(numSteps));
                                                     Log.i("BT_TEST", "Number of Steps Taken: " + numSteps);
                                                 }
                                             } else {
