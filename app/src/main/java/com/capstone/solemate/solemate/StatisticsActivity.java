@@ -11,6 +11,8 @@ public class StatisticsActivity extends Activity {
     private StepCountThread mStepCountThread;
     protected static TextView stepCountText;
 
+    protected static TextView heelValText, leftValText, rightValText, toeValText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +21,11 @@ public class StatisticsActivity extends Activity {
         setContentView(R.layout.activity_statistics);
 
         stepCountText = (TextView) findViewById(R.id.stepsTaken);
+
+        heelValText = (TextView) findViewById(R.id.heelVal);
+        leftValText = (TextView) findViewById(R.id.leftVal);
+        rightValText = (TextView) findViewById(R.id.rightVal);
+        toeValText = (TextView) findViewById(R.id.toeVal);
 
         // Create thread to update step count
         mStepCountThread = new StepCountThread();
@@ -68,6 +75,11 @@ public class StatisticsActivity extends Activity {
                     @Override
                     public void run() {
                         stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
+
+                        heelValText.setText(String.valueOf(FeedbackActivity.heelVal));
+                        leftValText.setText(String.valueOf(FeedbackActivity.leftVal));
+                        rightValText.setText(String.valueOf(FeedbackActivity.rightVal));
+                        toeValText.setText(String.valueOf(FeedbackActivity.toeVal));
                     }
                 });
             }

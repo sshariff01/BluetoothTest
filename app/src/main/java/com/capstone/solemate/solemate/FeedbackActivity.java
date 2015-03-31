@@ -83,6 +83,8 @@ public class FeedbackActivity extends Activity {
     public static boolean STEP_UP = true, STEP_DOWN = false;
     protected static int MAX_PRESSURE_VAL = 64;
 
+    public static int heelVal = 0, leftVal = 0, rightVal = 0, toeVal = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -503,6 +505,7 @@ public class FeedbackActivity extends Activity {
                                             else {
                                                 pressureIndex_Heel = 1;
                                             }
+                                            heelVal = adcReading;
 
 //                                            if (isExternalStorageWritable()) {
 //                                                writeToSD("HEEL: " + adcReading + "\n");
@@ -523,6 +526,8 @@ public class FeedbackActivity extends Activity {
                                             else if (adcReading < (LEFT_MODERATE-10)) pressureIndex_Left = 0;
                                             else pressureIndex_Left = 1;
 
+                                            leftVal = adcReading;
+
 //                                            if (isExternalStorageWritable()) {
 //                                                writeToSD("LEFT: " + adcReading + "\n");
 //                                            }
@@ -541,6 +546,8 @@ public class FeedbackActivity extends Activity {
                                             if (adcReading > (RIGHTBRIDGE_MODERATE+10)) pressureIndex_RightBridge = 2;
                                             else if (adcReading < (RIGHTBRIDGE_MODERATE-10)) pressureIndex_RightBridge = 0;
                                             else pressureIndex_RightBridge = 1;
+
+                                            rightVal = adcReading;
 
 //                                            if (isExternalStorageWritable()) {
 //                                                writeToSD("RIGHT: " + adcReading + "\n");
@@ -583,6 +590,8 @@ public class FeedbackActivity extends Activity {
                                             if (adcReading > (TOE_MODERATE+10)) pressureIndex_Toe = 2;
                                             else if (adcReading < (TOE_MODERATE-10)) pressureIndex_Toe = 0;
                                             else pressureIndex_Toe = 1;
+
+                                            toeVal = adcReading;
 
 //                                            if (isExternalStorageWritable()) {
 //                                                writeToSD("TOE: " + adcReading + "\n");

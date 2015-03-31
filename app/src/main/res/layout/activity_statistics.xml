@@ -31,4 +31,84 @@
         android:layout_alignTop="@+id/stepsTakenLabel"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Heel Pressure:"
+        android:id="@+id/heelPressure"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Left Pressure:"
+        android:id="@+id/leftPressure"
+        android:layout_below="@+id/heelPressure"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Right Pressure:"
+        android:id="@+id/rightPressure"
+        android:layout_below="@+id/leftPressure"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Toe Pressure:"
+        android:id="@+id/toePressure"
+        android:layout_below="@+id/rightPressure"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="heelVal"
+        android:id="@+id/heelVal"
+        android:layout_above="@+id/leftPressure"
+        android:layout_alignLeft="@+id/stepsTaken"
+        android:layout_alignStart="@+id/stepsTaken" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="leftVal"
+        android:id="@+id/leftVal"
+        android:layout_alignTop="@+id/leftPressure"
+        android:layout_alignLeft="@+id/heelVal"
+        android:layout_alignStart="@+id/heelVal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="rightVal"
+        android:id="@+id/rightVal"
+        android:layout_below="@+id/leftVal"
+        android:layout_alignLeft="@+id/leftVal"
+        android:layout_alignStart="@+id/leftVal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="toeVal"
+        android:id="@+id/toeVal"
+        android:layout_below="@+id/rightVal"
+        android:layout_alignLeft="@+id/rightVal"
+        android:layout_alignStart="@+id/rightVal" />
+
 </RelativeLayout>
