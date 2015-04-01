@@ -226,34 +226,6 @@ public class FeedbackActivity extends Activity {
     }
 
     /*
-     * HELPER METHODS
-     */
-    private boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) & WRITE_ENABLE_OPTION) return true;
-        return false;
-    }
-
-    private void writeToSD(String readMessage) {
-        File root = android.os.Environment.getExternalStorageDirectory();
-        File dir = new File (root.getAbsolutePath() + "/debug");
-        dir.mkdirs();
-        File file = new File(dir, OUTPUT_FILE_NAME);
-
-        try {
-            FileOutputStream fos = new FileOutputStream(file, true);
-            PrintWriter pw = new PrintWriter(fos);
-            pw.print(readMessage);
-            pw.flush();
-            pw.close();
-            fos.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-    }
-
-    /*
      * ASYNC TASKS AND OTHER THREADS
      */
     private class ImageFlipperTask extends AsyncTask<Void, Void, Void> {
@@ -288,6 +260,7 @@ public class FeedbackActivity extends Activity {
                         onProgressUpdate();
                         Thread.sleep(500);
                     }
+                    numSteps = numSteps+4;
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -680,4 +653,34 @@ public class FeedbackActivity extends Activity {
             }
         }
     }
+
+    /*
+     * HELPER METHODS
+     */
+    private boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) & WRITE_ENABLE_OPTION) return true;
+        return false;
+    }
+
+    private void writeToSD(String readMessage) {
+        File root = android.os.Environment.getExternalStorageDirectory();
+        File dir = new File (root.getAbsolutePath() + "/debug");
+        dir.mkdirs();
+        File file = new File(dir, OUTPUT_FILE_NAME);
+
+        try {
+            FileOutputStream fos = new FileOutputStream(file, true);
+            PrintWriter pw = new PrintWriter(fos);
+            pw.print(readMessage);
+            pw.flush();
+            pw.close();
+            fos.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+    }
+
+
 }

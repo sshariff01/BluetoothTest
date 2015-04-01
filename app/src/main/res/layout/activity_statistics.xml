@@ -28,7 +28,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text=" "
         android:id="@+id/stepsTaken"
-        android:layout_alignTop="@+id/stepsTakenLabel"
+        android:layout_above="@+id/stepsFrequency"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -45,10 +45,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=" "
+        android:text=" 555.999"
         android:id="@+id/stepsFrequency"
         android:layout_alignTop="@+id/stepsFrequencyLabel"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/stepsTaken"
+        android:layout_alignStart="@+id/stepsTaken" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="spm"
+        android:id="@+id/textView2"
+        android:layout_alignBottom="@+id/stepsFrequency"
+        android:layout_toRightOf="@+id/stepsFrequency"
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -129,5 +140,6 @@
         android:layout_below="@+id/rightVal"
         android:layout_alignLeft="@+id/rightVal"
         android:layout_alignStart="@+id/rightVal" />
+
 
 </RelativeLayout>
