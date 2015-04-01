@@ -6,17 +6,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+
 
 public class StatisticsActivity extends Activity {
     private StepCountThread mStepCountThread;
     protected static TextView stepCountText, stepFrequencyText;
     protected static TextView heelValText, leftValText, rightValText, toeValText;
-    private static long baseTime = System.currentTimeMillis(),
-                        currentTime = System.currentTimeMillis();
-    private static int numStepsInterval, numStepsPeriod = 0;
-    private static final int PERIOD_SIZE = 30;
-    private static int index = 0;
-    private static int[] numStepsIntervalArray = new int[PERIOD_SIZE];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +30,10 @@ public class StatisticsActivity extends Activity {
         rightValText = (TextView) findViewById(R.id.rightVal);
         toeValText = (TextView) findViewById(R.id.toeVal);
 
-        numStepsInterval = FeedbackActivity.numSteps;
-
         // Create thread to update step count
         mStepCountThread = new StepCountThread();
         mStepCountThread.start();
+
     }
 
     @Override
@@ -69,7 +65,6 @@ public class StatisticsActivity extends Activity {
      * ASYNC TASKS AND OTHER THREADS
      */
     private class StepCountThread extends Thread {
-
         public StepCountThread() { }
 
         public void run() {
@@ -79,22 +74,12 @@ public class StatisticsActivity extends Activity {
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
-                // Check if one minute has passed
-                currentTime = System.currentTimeMillis();
-                if ((currentTime-baseTime)/60000 >= 1) {
-                    baseTime = currentTime;
-                    numStepsPeriod = numStepsPeriod - numStepsIntervalArray[index];
-                    numStepsIntervalArray[index] = FeedbackActivity.numSteps - numStepsInterval;
-                    numStepsPeriod = numStepsPeriod + numStepsIntervalArray[index];
-                    index = ++index % PERIOD_SIZE;
-                    numStepsInterval = FeedbackActivity.numSteps;
-                }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
-                        stepFrequencyText.setText(String.valueOf(numStepsPeriod/PERIOD_SIZE));
+                        stepFrequencyText.setText(String.valueOf(round(FeedbackActivity.stepFreq, 3)));
 
                         heelValText.setText(String.valueOf(FeedbackActivity.heelVal));
                         leftValText.setText(String.valueOf(FeedbackActivity.leftVal));
@@ -105,5 +90,14 @@ public class StatisticsActivity extends Activity {
 
             }
         }
+    }
+
+    /*
+     * HELPER METHODS
+     */
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 }

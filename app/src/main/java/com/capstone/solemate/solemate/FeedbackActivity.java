@@ -88,6 +88,15 @@ public class FeedbackActivity extends Activity {
 
     public static int heelVal = 0, leftVal = 0, rightVal = 0, toeVal = 0;
 
+    private static long baseTime = System.currentTimeMillis(),
+            currentTime = System.currentTimeMillis();
+    private static int numStepsInterval, numStepsPeriod = 0;
+    private static final int PERIOD_SIZE = 30;
+    private static int stepsIntervalIndex = 0;
+    private static int[] numStepsIntervalArray = new int[600];
+    private static boolean FIRST_PERIOD;
+    public static float stepFreq;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +183,11 @@ public class FeedbackActivity extends Activity {
             new ConnectToBtTask().execute();
         }
 
+        numStepsInterval = FeedbackActivity.numSteps;
+        FIRST_PERIOD = true;
+
+        stepFreq = 0;
+
     }
 
     @Override
@@ -252,6 +266,7 @@ public class FeedbackActivity extends Activity {
                         value = 3;
                         onProgressUpdate();
                         Thread.sleep(500);
+                        numSteps++;
                     } else {
                         SHOW_IMAGES = true;
                         onProgressUpdate();
@@ -260,7 +275,6 @@ public class FeedbackActivity extends Activity {
                         onProgressUpdate();
                         Thread.sleep(500);
                     }
-                    numSteps = numSteps+4;
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -344,6 +358,33 @@ public class FeedbackActivity extends Activity {
 
                             Log.i("BT_TEST", "ALL set OFF");
                         }
+
+                        // Check if one minute has passed
+                        currentTime = System.currentTimeMillis();
+
+                        if ((currentTime-baseTime) >= 3000) {
+                            baseTime = currentTime;
+                            numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
+                            numStepsIntervalArray[stepsIntervalIndex] = FeedbackActivity.numSteps - numStepsInterval;
+                            numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
+                            stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
+                            numStepsInterval = FeedbackActivity.numSteps;
+
+                            if (!FIRST_PERIOD) {
+                                stepFreq = numStepsPeriod / (float) PERIOD_SIZE;
+                            } else {
+                                if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
+                                    int numMinutesPassed = 0;
+                                    for (int i = stepsIntervalIndex; i > 0; i=i-20) {
+                                        ++numMinutesPassed;
+                                    }
+                                    stepFreq = numStepsPeriod / (float) numMinutesPassed;
+                                } else {
+                                    FIRST_PERIOD = false;
+                                }
+                            }
+                        }
+
                     } else {
                         toeImages[0].setVisibility(View.GONE);
                         toeImages[1].setVisibility(View.GONE);
@@ -451,6 +492,7 @@ public class FeedbackActivity extends Activity {
 
     private class ConnectedThread extends Thread {
         private final InputStream inStream;
+
 //        private final OutputStream outStream;
 
         public ConnectedThread(BluetoothSocket socket) {
@@ -461,9 +503,9 @@ public class FeedbackActivity extends Activity {
 
                 if (tmpIn != null) SOCKET_INSTREAM_ACTIVE = true;
 
-                if (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
-                    mHandler = new Handler() {
-                        public void handleMessage(Message msg) {
+                mHandler = new Handler() {
+                    public void handleMessage(Message msg) {
+                        if (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
                             switch (msg.what) {
                                 case RECEIVE_MESSAGE:
                                     byte[] readByte = (byte[]) msg.obj;
@@ -479,13 +521,11 @@ public class FeedbackActivity extends Activity {
                                                 HEEL_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (HEEL_MODERATE+10)) {
+                                            if (adcReading > (HEEL_MODERATE + 10)) {
                                                 pressureIndex_Heel = 2;
-                                            }
-                                            else if (adcReading < (HEEL_MODERATE-10)) {
+                                            } else if (adcReading < (HEEL_MODERATE - 10)) {
                                                 pressureIndex_Heel = 0;
-                                            }
-                                            else {
+                                            } else {
                                                 pressureIndex_Heel = 1;
                                             }
                                             heelVal = adcReading;
@@ -510,8 +550,10 @@ public class FeedbackActivity extends Activity {
                                                 RIGHTBRIDGE_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (RIGHTBRIDGE_MODERATE+10)) pressureIndex_RightBridge = 2;
-                                            else if (adcReading < (RIGHTBRIDGE_MODERATE-10)) pressureIndex_RightBridge = 0;
+                                            if (adcReading > (RIGHTBRIDGE_MODERATE + 10))
+                                                pressureIndex_RightBridge = 2;
+                                            else if (adcReading < (RIGHTBRIDGE_MODERATE - 10))
+                                                pressureIndex_RightBridge = 0;
                                             else pressureIndex_RightBridge = 1;
 
                                             rightVal = adcReading;
@@ -528,12 +570,12 @@ public class FeedbackActivity extends Activity {
 //                                                Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
 //                                                e.printStackTrace();
 //                                            }
-                                            /*
-                                            * STEP COUNTER ALGORITHM
-                                            */
+                                        /*
+                                        * STEP COUNTER ALGORITHM
+                                        */
                                             if (!STEP_DOWN && STEP_UP) {
                                                 if (
-                                                        (adcReading > MAX_PRESSURE_VAL-15)
+                                                        (adcReading > MAX_PRESSURE_VAL - 15)
                                                                 && (adcReading <= MAX_PRESSURE_VAL)
                                                         ) {
                                                     STEP_DOWN = true;
@@ -559,8 +601,10 @@ public class FeedbackActivity extends Activity {
                                                 TOE_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (TOE_MODERATE+10)) pressureIndex_Toe = 2;
-                                            else if (adcReading < (TOE_MODERATE-10)) pressureIndex_Toe = 0;
+                                            if (adcReading > (TOE_MODERATE + 10))
+                                                pressureIndex_Toe = 2;
+                                            else if (adcReading < (TOE_MODERATE - 10))
+                                                pressureIndex_Toe = 0;
                                             else pressureIndex_Toe = 1;
 
                                             toeVal = adcReading;
@@ -585,8 +629,10 @@ public class FeedbackActivity extends Activity {
                                                 LEFT_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (LEFT_MODERATE+10)) pressureIndex_Left = 2;
-                                            else if (adcReading < (LEFT_MODERATE-10)) pressureIndex_Left = 0;
+                                            if (adcReading > (LEFT_MODERATE + 10))
+                                                pressureIndex_Left = 2;
+                                            else if (adcReading < (LEFT_MODERATE - 10))
+                                                pressureIndex_Left = 0;
                                             else pressureIndex_Left = 1;
 
                                             leftVal = adcReading;
@@ -609,19 +655,47 @@ public class FeedbackActivity extends Activity {
 
                                     if (
                                             HEEL_MODERATE != -1
-                                            && LEFT_MODERATE != -1
-                                            && RIGHTBRIDGE_MODERATE != -1
-                                            && TOE_MODERATE != -1
+                                                    && LEFT_MODERATE != -1
+                                                    && RIGHTBRIDGE_MODERATE != -1
+                                                    && TOE_MODERATE != -1
                                             ) {
                                         recalibratingProgress.dismiss();
                                     }
 
                                     break;
                             }
-                        };
-                    };
-                }
+                        }
+                        ;
+                    }
+                };
 //                tmpOut = socket.getOutputStream();
+
+
+                // Check if one minute has passed
+                currentTime = System.currentTimeMillis();
+
+                if ((currentTime-baseTime) >= 3000) {
+                    baseTime = currentTime;
+                    numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
+                    numStepsIntervalArray[stepsIntervalIndex] = FeedbackActivity.numSteps - numStepsInterval;
+                    numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
+                    stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
+                    numStepsInterval = FeedbackActivity.numSteps;
+
+                    if (!FIRST_PERIOD) {
+                        stepFreq = numStepsPeriod / (float) PERIOD_SIZE;
+                    } else {
+                        if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
+                            int numMinutesPassed = 0;
+                            for (int i = stepsIntervalIndex; i > 0; i=i-20) {
+                                ++numMinutesPassed;
+                            }
+                            stepFreq = numStepsPeriod / (float) numMinutesPassed;
+                        } else {
+                            FIRST_PERIOD = false;
+                        }
+                    }
+                }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 Log.i("BT_TEST: FATAL ERROR", "Failed to get input stream from socket");
