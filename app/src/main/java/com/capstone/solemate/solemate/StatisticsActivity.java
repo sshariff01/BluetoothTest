@@ -9,9 +9,14 @@ import android.widget.TextView;
 
 public class StatisticsActivity extends Activity {
     private StepCountThread mStepCountThread;
-    protected static TextView stepCountText;
-
+    protected static TextView stepCountText, stepFrequencyText;
     protected static TextView heelValText, leftValText, rightValText, toeValText;
+    private static long baseTime = System.currentTimeMillis(),
+                        currentTime = System.currentTimeMillis();
+    private static int numStepsInterval, numStepsPeriod = 0;
+    private static final int PERIOD_SIZE = 30;
+    private static int index = 0;
+    private static int[] numStepsIntervalArray = new int[PERIOD_SIZE];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +26,14 @@ public class StatisticsActivity extends Activity {
         setContentView(R.layout.activity_statistics);
 
         stepCountText = (TextView) findViewById(R.id.stepsTaken);
+        stepFrequencyText = (TextView) findViewById(R.id.stepsFrequency);
 
         heelValText = (TextView) findViewById(R.id.heelVal);
         leftValText = (TextView) findViewById(R.id.leftVal);
         rightValText = (TextView) findViewById(R.id.rightVal);
         toeValText = (TextView) findViewById(R.id.toeVal);
+
+        numStepsInterval = FeedbackActivity.numSteps;
 
         // Create thread to update step count
         mStepCountThread = new StepCountThread();
@@ -71,10 +79,22 @@ public class StatisticsActivity extends Activity {
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
+                // Check if one minute has passed
+                currentTime = System.currentTimeMillis();
+                if ((currentTime-baseTime)/60000 >= 1) {
+                    baseTime = currentTime;
+                    numStepsPeriod = numStepsPeriod - numStepsIntervalArray[index];
+                    numStepsIntervalArray[index] = FeedbackActivity.numSteps - numStepsInterval;
+                    numStepsPeriod = numStepsPeriod + numStepsIntervalArray[index];
+                    index = ++index % PERIOD_SIZE;
+                    numStepsInterval = FeedbackActivity.numSteps;
+                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
+                        stepFrequencyText.setText(String.valueOf(numStepsPeriod/PERIOD_SIZE));
 
                         heelValText.setText(String.valueOf(FeedbackActivity.heelVal));
                         leftValText.setText(String.valueOf(FeedbackActivity.leftVal));
@@ -82,6 +102,7 @@ public class StatisticsActivity extends Activity {
                         toeValText.setText(String.valueOf(FeedbackActivity.toeVal));
                     }
                 });
+
             }
         }
     }
