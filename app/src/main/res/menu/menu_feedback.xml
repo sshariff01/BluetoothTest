@@ -5,4 +5,6 @@
         android:orderInCategory="100" android:showAsAction="never" />
     <item android:id="@+id/action_statistics" android:title="@string/action_statistics"
         android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/action_recalibrate" android:title="@string/action_recalibrate"
+        android:orderInCategory="100" android:showAsAction="ifRoom" />
 </menu>

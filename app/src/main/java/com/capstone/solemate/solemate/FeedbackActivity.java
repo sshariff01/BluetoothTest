@@ -47,7 +47,10 @@ public class FeedbackActivity extends Activity {
     protected static TextView text;
     protected static TextView stepCount;
 
-    protected static int HEEL_MODERATE, LEFT_MODERATE, RIGHTBRIDGE_MODERATE, TOE_MODERATE;
+    protected static int HEEL_MODERATE = -1,
+            LEFT_MODERATE = -1,
+            RIGHTBRIDGE_MODERATE = -1,
+            TOE_MODERATE = -1;
 
     protected static ImageView imageFootBase;
     protected static ImageView imageToeModerate,
@@ -70,7 +73,8 @@ public class FeedbackActivity extends Activity {
             pressureIndex_Toe = 1;
 
     // Loading spinner
-    public ProgressDialog progress;
+    public ProgressDialog connectingProgress;
+    public ProgressDialog recalibratingProgress;
 
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -98,8 +102,8 @@ public class FeedbackActivity extends Activity {
             public void onClick(View v) {
                 if (DEBUG_TEST_MODE) {
                     index = (index + 1) % 3;
-                } else {
-                    index = (index + 1) % 4;
+//                } else {
+//                    index = (index + 1) % 4;
                 }
                 Log.i("BT_TEST", "index val set to " + index);
             }
@@ -155,18 +159,19 @@ public class FeedbackActivity extends Activity {
         stepCount = (TextView) findViewById(R.id.stepsCountVal);
         stepCount.setText(String.valueOf(numSteps));
 
-        // Init loading spinner
-        progress = new ProgressDialog(this);
-        progress.setTitle("Connecting");
-        progress.setMessage("Please wait while we get in touch with your SoleMate...");
-        progress.show();
+        // Init connect loading spinner
+        connectingProgress = new ProgressDialog(this);
+        connectingProgress.setTitle("Connecting");
+        connectingProgress.setMessage("Please wait while we get in touch with your SoleMate...");
+
+        // Init recalibrate loading spinner
+        recalibratingProgress = new ProgressDialog(this);
+        recalibratingProgress.setTitle("Recalibrating");
+        recalibratingProgress.setMessage("Let's start over...");
 
         new ConnectToBtTask().execute();
+//        new ImageFlipperTask().execute();
 
-        HEEL_MODERATE = 55;
-        LEFT_MODERATE = 40;
-        RIGHTBRIDGE_MODERATE = 30;
-        TOE_MODERATE = 20;
     }
 
     @Override
@@ -190,7 +195,20 @@ public class FeedbackActivity extends Activity {
                 // Launch statistics activity
                 Intent myIntent = new Intent(FeedbackActivity.this, StatisticsActivity.class);
                 FeedbackActivity.this.startActivity(myIntent);
-                break;
+                return true;
+            case R.id.action_recalibrate:
+                // Re-Calibrate moderate values
+                recalibratingProgress.show();
+                try {
+                    Thread.sleep(1200);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+                HEEL_MODERATE = -1;
+                LEFT_MODERATE = -1;
+                RIGHTBRIDGE_MODERATE = -1;
+                TOE_MODERATE = -1;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -409,6 +427,8 @@ public class FeedbackActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
 
+            connectingProgress.show();
+
             // Close discovery
             if (mBluetoothAdapter.isDiscovering()) mBluetoothAdapter.cancelDiscovery();
 
@@ -450,7 +470,7 @@ public class FeedbackActivity extends Activity {
 
         @Override
         protected void onProgressUpdate(Void... unusedVoid) {
-            progress.dismiss();
+            connectingProgress.dismiss();
             new ImageFlipperTask().execute();
 
         }
@@ -496,6 +516,10 @@ public class FeedbackActivity extends Activity {
 
                                     switch (identifier) {
                                         case 0:
+                                            if (HEEL_MODERATE == -1) {
+                                                HEEL_MODERATE = adcReading;
+                                            }
+
                                             if (adcReading > (HEEL_MODERATE+10)) {
                                                 pressureIndex_Heel = 2;
                                             }
@@ -521,28 +545,12 @@ public class FeedbackActivity extends Activity {
 //                                            }
 
                                             break;
-                                        case 3:
-                                            if (adcReading > (LEFT_MODERATE+10)) pressureIndex_Left = 2;
-                                            else if (adcReading < (LEFT_MODERATE-10)) pressureIndex_Left = 0;
-                                            else pressureIndex_Left = 1;
 
-                                            leftVal = adcReading;
-
-//                                            if (isExternalStorageWritable()) {
-//                                                writeToSD("LEFT: " + adcReading + "\n");
-//                                            }
-//                                            try {
-//                                                text.setText("LEFT: " + String.valueOf(adcReading) + "\n");
-//                                            } catch (Exception e) {
-//                                                sb = new StringBuilder();
-//                                                sb = sb.append(adcReading);
-//                                                sb = sb.delete(0, sb.length()-1);
-//                                                Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
-//                                                e.printStackTrace();
-//                                            }
-
-                                            break;
                                         case 1:
+                                            if (RIGHTBRIDGE_MODERATE == -1) {
+                                                RIGHTBRIDGE_MODERATE = adcReading;
+                                            }
+
                                             if (adcReading > (RIGHTBRIDGE_MODERATE+10)) pressureIndex_RightBridge = 2;
                                             else if (adcReading < (RIGHTBRIDGE_MODERATE-10)) pressureIndex_RightBridge = 0;
                                             else pressureIndex_RightBridge = 1;
@@ -586,7 +594,12 @@ public class FeedbackActivity extends Activity {
                                             }
 
                                             break;
+
                                         case 2:
+                                            if (TOE_MODERATE == -1) {
+                                                TOE_MODERATE = adcReading;
+                                            }
+
                                             if (adcReading > (TOE_MODERATE+10)) pressureIndex_Toe = 2;
                                             else if (adcReading < (TOE_MODERATE-10)) pressureIndex_Toe = 0;
                                             else pressureIndex_Toe = 1;
@@ -607,6 +620,41 @@ public class FeedbackActivity extends Activity {
 //                                            }
 
                                             break;
+
+                                        case 3:
+                                            if (LEFT_MODERATE == -1) {
+                                                LEFT_MODERATE = adcReading;
+                                            }
+
+                                            if (adcReading > (LEFT_MODERATE+10)) pressureIndex_Left = 2;
+                                            else if (adcReading < (LEFT_MODERATE-10)) pressureIndex_Left = 0;
+                                            else pressureIndex_Left = 1;
+
+                                            leftVal = adcReading;
+
+//                                            if (isExternalStorageWritable()) {
+//                                                writeToSD("LEFT: " + adcReading + "\n");
+//                                            }
+//                                            try {
+//                                                text.setText("LEFT: " + String.valueOf(adcReading) + "\n");
+//                                            } catch (Exception e) {
+//                                                sb = new StringBuilder();
+//                                                sb = sb.append(adcReading);
+//                                                sb = sb.delete(0, sb.length()-1);
+//                                                Log.i("BT_TEST: EXCEPTION ENCOUNTERED PARSING DATA", sb.toString());
+//                                                e.printStackTrace();
+//                                            }
+
+                                            break;
+                                    }
+
+                                    if (
+                                            HEEL_MODERATE != -1
+                                            && LEFT_MODERATE != -1
+                                            && RIGHTBRIDGE_MODERATE != -1
+                                            && TOE_MODERATE != -1
+                                            ) {
+                                        recalibratingProgress.dismiss();
                                     }
 
                                     break;
