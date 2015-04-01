@@ -79,8 +79,7 @@ public class FeedbackActivity extends Activity {
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    // Set to false when going in production!
-    public static boolean DEBUG_TEST_MODE = false;
+
     public static int index;
 
     public static int numSteps;
@@ -100,7 +99,7 @@ public class FeedbackActivity extends Activity {
         mainLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (DEBUG_TEST_MODE) {
+                if (MainActivity.DEBUG_TEST_MODE) {
                     index = (index + 1) % 3;
 //                } else {
 //                    index = (index + 1) % 4;
@@ -169,8 +168,11 @@ public class FeedbackActivity extends Activity {
         recalibratingProgress.setTitle("Recalibrating");
         recalibratingProgress.setMessage("Let's start over...");
 
-        new ConnectToBtTask().execute();
-//        new ImageFlipperTask().execute();
+        if (MainActivity.DEBUG_TEST_MODE) {
+            new ImageFlipperTask().execute();
+        } else {
+            new ConnectToBtTask().execute();
+        }
 
     }
 
@@ -271,7 +273,7 @@ public class FeedbackActivity extends Activity {
         protected Void doInBackground(Void... unusedVoids) {
             while(true) {
                 try {
-                    if (DEBUG_TEST_MODE) {
+                    if (MainActivity.DEBUG_TEST_MODE) {
                         value = index;
                         onProgressUpdate();
                         Thread.sleep(500);
@@ -285,22 +287,6 @@ public class FeedbackActivity extends Activity {
                         SHOW_IMAGES = false;
                         onProgressUpdate();
                         Thread.sleep(500);
-
-//                        switch (index) {
-//                            case 0:
-//                                pressureIndex_Heel = (pressureIndex_Heel+1) % 3;
-//                                break;
-//                            case 1:
-//                                pressureIndex_Left = (pressureIndex_Left+1) % 3;
-//                                break;
-//                            case 2:
-//                                pressureIndex_RightBridge = (pressureIndex_RightBridge+1) % 3;
-//                                break;
-//                            case 3:
-//                                pressureIndex_Toe = (pressureIndex_Toe+1) % 3;
-//                                break;
-//                        }
-
                     }
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
@@ -315,7 +301,7 @@ public class FeedbackActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (DEBUG_TEST_MODE) {
+                    if (MainActivity.DEBUG_TEST_MODE) {
                         if (value == 0) {
                             toeImages[0].setVisibility(View.GONE);
                             rightBridgeImages[0].setVisibility(View.GONE);

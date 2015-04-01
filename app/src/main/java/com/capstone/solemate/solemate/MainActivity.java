@@ -30,6 +30,9 @@ import java.util.List;
 
 
 public class MainActivity extends Activity implements OnClickListener {
+    // Set to false when going in production!
+    public static boolean DEBUG_TEST_MODE = true;
+
     private final static int REQUEST_ENABLE_BT = 1;
 
     // List to pass to list view array adapter
@@ -184,36 +187,41 @@ public class MainActivity extends Activity implements OnClickListener {
              * ENABLE BLUETOOTH ADAPTER
              */
 
-            // Launch new activity to connect to bluetooth and provide real-time user feedback
-//            Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
-//            myIntent.putExtra("hc05MacId", hc05MacId);
-//            MainActivity.this.startActivity(myIntent);
+            if (DEBUG_TEST_MODE) {
+                // Bluetooth must be activated
+                // Launch new activity to connect to bluetooth and provide real-time user feedback
+                Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
+                myIntent.putExtra("hc05MacId", hc05MacId);
+                MainActivity.this.startActivity(myIntent);
 
-            // Perform action on click
-            if (mBluetoothAdapter == null) {
-                Log.i ("BT_TEST_DEBUG", "Device does not support Bluetooth");
-            } else if (!mBluetoothAdapter.isEnabled()) {
+            } else {
+
+                // Perform action on click
+                if (mBluetoothAdapter == null) {
+                    Log.i("BT_TEST_DEBUG", "Device does not support Bluetooth");
+                } else if (!mBluetoothAdapter.isEnabled()) {
                 /*
                  * Begin AsyncTask to enable BT
                  */
-                Log.i("BT_TEST", "Bluetooth is not enabled!");
-                new EnableBtTask().execute();
-            } else if (!mBluetoothAdapter.isDiscovering()) {
+                    Log.i("BT_TEST", "Bluetooth is not enabled!");
+                    new EnableBtTask().execute();
+                } else if (!mBluetoothAdapter.isDiscovering()) {
                 /*
                  * Begin AsyncTask to start discovery
                  */
-                if (arrayAdapter.isEmpty()) {
-                    new DiscoveryTask().execute();
-                } else {
-                    listPopupWindow.show();
-                }
+                    if (arrayAdapter.isEmpty()) {
+                        new DiscoveryTask().execute();
+                    } else {
+                        listPopupWindow.show();
+                    }
 
-            } else if (mBluetoothAdapter.isDiscovering()) {
-                listPopupWindow.show();
-                progress.show();
-                Log.i("BT_TEST", "Bluetooth is already discovering!");
+                } else if (mBluetoothAdapter.isDiscovering()) {
+                    listPopupWindow.show();
+                    progress.show();
+                    Log.i("BT_TEST", "Bluetooth is already discovering!");
 //                    } else if (!mBluetoothAdapter.isEnabled()) {
 //                        Log.i("BT_TEST", "Bluetooth is not enabled!");
+                }
             }
 
         } else {
