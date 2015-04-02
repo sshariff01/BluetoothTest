@@ -364,33 +364,6 @@ public class FeedbackActivity extends Activity {
 
 //                            Log.i("BT_TEST", "ALL set OFF");
                         }
-
-                        // Check if one minute has passed
-                        currentTime = System.currentTimeMillis();
-
-                        if ((currentTime-baseTime) >= 3000) {
-                            baseTime = currentTime;
-                            numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
-                            numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
-                            numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
-                            stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
-                            numStepsInterval = numSteps;
-
-                            if (!FIRST_PERIOD) {
-                                stepFreq = numStepsPeriod / (float) (PERIOD_SIZE/20);
-                            } else {
-                                if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
-                                    int numMinutesPassed = 0;
-                                    for (int i = stepsIntervalIndex; i > 0; i=i-20) {
-                                        ++numMinutesPassed;
-                                    }
-                                    stepFreq = numStepsPeriod / (float) numMinutesPassed;
-                                } else {
-                                    FIRST_PERIOD = false;
-                                }
-                            }
-                        }
-
                     } else {
                         toeImages[0].setVisibility(View.GONE);
                         toeImages[1].setVisibility(View.GONE);
@@ -416,6 +389,33 @@ public class FeedbackActivity extends Activity {
                         }
 
                     }
+
+                    // Check if 3 secs have passed
+                    currentTime = System.currentTimeMillis();
+
+                    if ((currentTime-baseTime) >= 3000) {
+                        baseTime = currentTime;
+                        numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
+                        numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
+                        numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
+                        stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
+                        numStepsInterval = numSteps;
+
+                        if (!FIRST_PERIOD) {
+                            stepFreq = numStepsPeriod / (float) (PERIOD_SIZE/20);
+                        } else {
+                            if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
+                                int numMinutesPassed = 0;
+                                for (int i = stepsIntervalIndex; i > 0; i=i-20) {
+                                    ++numMinutesPassed;
+                                }
+                                stepFreq = numStepsPeriod / (float) numMinutesPassed;
+                            } else {
+                                FIRST_PERIOD = false;
+                            }
+                        }
+                    }
+
 
                 }
             });
@@ -692,33 +692,6 @@ public class FeedbackActivity extends Activity {
                     }
                 };
 //                tmpOut = socket.getOutputStream();
-
-
-                // Check if one minute has passed
-                currentTime = System.currentTimeMillis();
-
-                if ((currentTime-baseTime) >= 3000) {
-                    baseTime = currentTime;
-                    numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
-                    numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
-                    numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
-                    stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
-                    numStepsInterval = numSteps;
-
-                    if (!FIRST_PERIOD) {
-                        stepFreq = numStepsPeriod / (float) PERIOD_SIZE;
-                    } else {
-                        if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
-                            int numMinutesPassed = 0;
-                            for (int i = stepsIntervalIndex; i > 0; i=i-20) {
-                                ++numMinutesPassed;
-                            }
-                            stepFreq = numStepsPeriod / (float) numMinutesPassed;
-                        } else {
-                            FIRST_PERIOD = false;
-                        }
-                    }
-                }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 Log.i("BT_TEST: FATAL ERROR", "Failed to get input stream from socket");
