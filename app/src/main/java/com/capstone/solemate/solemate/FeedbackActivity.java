@@ -34,7 +34,6 @@ public class FeedbackActivity extends Activity {
     private static final int RECEIVE_MESSAGE = 1;
     private StringBuilder sb;
 
-    private static boolean WRITE_ENABLE_OPTION = true;
     private static final String OUTPUT_FILE_NAME = "testBTData.txt";
 
     // BT device connection attributes
@@ -550,9 +549,6 @@ public class FeedbackActivity extends Activity {
                                     int identifier = (readByte[0] & 0xC0) >> 6;
                                     int adcReading = readByte[0] & 0x3F; // 0x3F = 0011 1111
 
-//                                    char readMessage = new String(readByte, 0, msg.arg1).toCharArray()[0];
-//                                    int readMessage = readByte[0];
-
                                     switch (identifier) {
                                         case 0:
                                             if (HEEL_MODERATE == -1) {
@@ -568,9 +564,9 @@ public class FeedbackActivity extends Activity {
                                             }
                                             heelVal = adcReading;
 
-//                                            if (isExternalStorageWritable()) {
-//                                                writeToSD("HEEL: " + adcReading + "\n");
-//                                            }
+                                            if (isExternalStorageWritable()) {
+                                                writeToSD("HEEL: " + adcReading + "\n");
+                                            }
 //                                            try {
 //                                                text.setText("HEEL: " + String.valueOf(adcReading) + "\n");
 //                                            } catch (Exception e) {
@@ -596,9 +592,9 @@ public class FeedbackActivity extends Activity {
 
                                             rightVal = adcReading;
 
-//                                            if (isExternalStorageWritable()) {
-//                                                writeToSD("RIGHT: " + adcReading + "\n");
-//                                            }
+                                            if (isExternalStorageWritable()) {
+                                                writeToSD("RIGHT: " + adcReading + "\n");
+                                            }
 //                                            try {
 //                                                text.setText("RIGHT: " + String.valueOf(adcReading) + "\n");
 //                                            } catch (Exception e) {
@@ -647,9 +643,9 @@ public class FeedbackActivity extends Activity {
 
                                             toeVal = adcReading;
 
-//                                            if (isExternalStorageWritable()) {
-//                                                writeToSD("TOE: " + adcReading + "\n");
-//                                            }
+                                            if (isExternalStorageWritable()) {
+                                                writeToSD("TOE: " + adcReading + "\n");
+                                            }
 //                                            try {
 //                                                text.setText("TOE: " + String.valueOf(adcReading) + "\n");
 //                                            } catch (Exception e) {
@@ -675,9 +671,9 @@ public class FeedbackActivity extends Activity {
 
                                             leftVal = adcReading;
 
-//                                            if (isExternalStorageWritable()) {
-//                                                writeToSD("LEFT: " + adcReading + "\n");
-//                                            }
+                                            if (isExternalStorageWritable()) {
+                                                writeToSD("LEFT: " + adcReading + "\n");
+                                            }
 //                                            try {
 //                                                text.setText("LEFT: " + String.valueOf(adcReading) + "\n");
 //                                            } catch (Exception e) {
@@ -736,7 +732,7 @@ public class FeedbackActivity extends Activity {
      */
     private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) & WRITE_ENABLE_OPTION) return true;
+        if (Environment.MEDIA_MOUNTED.equals(state) & MainActivity.WRITE_ENABLE_OPTION) return true;
         return false;
     }
 
