@@ -1,6 +1,7 @@
 package com.capstone.solemate.solemate;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,9 @@ public class StatisticsActivity extends Activity {
         // Up navigation
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_statistics);
+
+        Drawable statisticsRLayout = findViewById(R.id.statisticsRLayout).getBackground();
+        statisticsRLayout.setAlpha(70);
 
         stepCountText = (TextView) findViewById(R.id.stepsTaken);
         stepFrequencyText = (TextView) findViewById(R.id.stepsFrequency);
