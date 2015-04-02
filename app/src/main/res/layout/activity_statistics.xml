@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=" 555.999"
+        android:text=" "
         android:id="@+id/stepsFrequency"
         android:layout_alignTop="@+id/stepsFrequencyLabel"
         android:layout_alignLeft="@+id/stepsTaken"

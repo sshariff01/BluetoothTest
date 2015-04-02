@@ -96,6 +96,7 @@ public class StatisticsActivity extends Activity {
      * HELPER METHODS
      */
     public static float round(float d, int decimalPlace) {
+        System.out.println("FLOAT VALUE = " + Float.toString(d));
         BigDecimal bd = new BigDecimal(Float.toString(d));
         bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
         return bd.floatValue();

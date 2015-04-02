@@ -91,9 +91,9 @@ public class FeedbackActivity extends Activity {
     private static long baseTime = System.currentTimeMillis(),
             currentTime = System.currentTimeMillis();
     private static int numStepsInterval, numStepsPeriod = 0;
-    private static final int PERIOD_SIZE = 30;
+    private static final int PERIOD_SIZE = 600;
     private static int stepsIntervalIndex = 0;
-    private static int[] numStepsIntervalArray = new int[600];
+    private static int[] numStepsIntervalArray = new int[PERIOD_SIZE];
     private static boolean FIRST_PERIOD;
     public static float stepFreq;
 
@@ -183,7 +183,7 @@ public class FeedbackActivity extends Activity {
             new ConnectToBtTask().execute();
         }
 
-        numStepsInterval = FeedbackActivity.numSteps;
+        numStepsInterval = numSteps;
         FIRST_PERIOD = true;
 
         stepFreq = 0;
@@ -305,7 +305,7 @@ public class FeedbackActivity extends Activity {
                             leftSideImages[2].setVisibility(View.GONE);
                             heelImages[2].setVisibility(View.GONE);
 
-                            Log.i("BT_TEST", "Moderate set ON");
+//                            Log.i("BT_TEST", "Moderate set ON");
                         } else if (value == 1) {
                             toeImages[0].setVisibility(View.GONE);
                             rightBridgeImages[0].setVisibility(View.GONE);
@@ -322,7 +322,7 @@ public class FeedbackActivity extends Activity {
                             leftSideImages[2].setVisibility(View.VISIBLE);
                             heelImages[2].setVisibility(View.VISIBLE);
 
-                            Log.i("BT_TEST", "Heavy set ON");
+//                            Log.i("BT_TEST", "Heavy set ON");
                         } else if (value == 2) {
                             toeImages[0].setVisibility(View.VISIBLE);
                             rightBridgeImages[0].setVisibility(View.VISIBLE);
@@ -339,7 +339,7 @@ public class FeedbackActivity extends Activity {
                             leftSideImages[2].setVisibility(View.GONE);
                             heelImages[2].setVisibility(View.GONE);
 
-                            Log.i("BT_TEST", "Light set ON");
+//                            Log.i("BT_TEST", "Light set ON");
                         } else {
                             toeImages[0].setVisibility(View.GONE);
                             rightBridgeImages[0].setVisibility(View.GONE);
@@ -356,7 +356,7 @@ public class FeedbackActivity extends Activity {
                             leftSideImages[2].setVisibility(View.GONE);
                             heelImages[2].setVisibility(View.GONE);
 
-                            Log.i("BT_TEST", "ALL set OFF");
+//                            Log.i("BT_TEST", "ALL set OFF");
                         }
 
                         // Check if one minute has passed
@@ -365,13 +365,13 @@ public class FeedbackActivity extends Activity {
                         if ((currentTime-baseTime) >= 3000) {
                             baseTime = currentTime;
                             numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
-                            numStepsIntervalArray[stepsIntervalIndex] = FeedbackActivity.numSteps - numStepsInterval;
+                            numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
                             numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
                             stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
-                            numStepsInterval = FeedbackActivity.numSteps;
+                            numStepsInterval = numSteps;
 
                             if (!FIRST_PERIOD) {
-                                stepFreq = numStepsPeriod / (float) PERIOD_SIZE;
+                                stepFreq = numStepsPeriod / (float) (PERIOD_SIZE/20);
                             } else {
                                 if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
                                     int numMinutesPassed = 0;
@@ -677,10 +677,10 @@ public class FeedbackActivity extends Activity {
                 if ((currentTime-baseTime) >= 3000) {
                     baseTime = currentTime;
                     numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
-                    numStepsIntervalArray[stepsIntervalIndex] = FeedbackActivity.numSteps - numStepsInterval;
+                    numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
                     numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
                     stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
-                    numStepsInterval = FeedbackActivity.numSteps;
+                    numStepsInterval = numSteps;
 
                     if (!FIRST_PERIOD) {
                         stepFreq = numStepsPeriod / (float) PERIOD_SIZE;
