@@ -294,6 +294,7 @@ public class FeedbackActivity extends Activity {
                 @Override
                 public void run() {
                     if (MainActivity.DEBUG_TEST_MODE) {
+                        stepCount.setText(String.valueOf(numSteps));
                         if (value == 0) {
                             toeImages[0].setVisibility(View.GONE);
                             rightBridgeImages[0].setVisibility(View.GONE);
