@@ -220,11 +220,7 @@ public class FeedbackActivity extends Activity {
             case R.id.action_recalibrate:
                 // Re-Calibrate moderate values
                 recalibratingProgress.show();
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
+
                 HEEL_MODERATE = -1;
                 LEFT_MODERATE = -1;
                 RIGHTBRIDGE_MODERATE = -1;
@@ -389,36 +385,55 @@ public class FeedbackActivity extends Activity {
                         }
 
                     }
-
-                    // Check if 3 secs have passed
-                    currentTime = System.currentTimeMillis();
-
-                    if ((currentTime-baseTime) >= 3000) {
-                        baseTime = currentTime;
-                        numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
-                        numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
-                        numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
-                        stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
-                        numStepsInterval = numSteps;
-
-                        if (!FIRST_PERIOD) {
-                            stepFreq = numStepsPeriod / (float) (PERIOD_SIZE/20);
-                        } else {
-                            if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
-                                int numMinutesPassed = 0;
-                                for (int i = stepsIntervalIndex; i > 0; i=i-20) {
-                                    ++numMinutesPassed;
-                                }
-                                stepFreq = numStepsPeriod / (float) numMinutesPassed;
-                            } else {
-                                FIRST_PERIOD = false;
-                            }
-                        }
-                    }
-
-
                 }
             });
+
+            // Check if 3 secs have passed
+            currentTime = System.currentTimeMillis();
+
+            if ((currentTime-baseTime) >= 3000) {
+                baseTime = currentTime;
+                numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
+                numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
+                numStepsPeriod = numStepsPeriod + numStepsIntervalArray[stepsIntervalIndex];
+                stepsIntervalIndex = ++stepsIntervalIndex % PERIOD_SIZE;
+                numStepsInterval = numSteps;
+
+                if (!FIRST_PERIOD) {
+                    stepFreq = numStepsPeriod / (float) (PERIOD_SIZE/20);
+                } else {
+                    if (stepsIntervalIndex < numStepsIntervalArray.length-1) {
+                        int numMinutesPassed = 0;
+                        for (int i = stepsIntervalIndex; i > 0; i=i-20) {
+                            ++numMinutesPassed;
+                        }
+                        stepFreq = numStepsPeriod / (float) numMinutesPassed;
+                    } else {
+                        FIRST_PERIOD = false;
+                    }
+                }
+            }
+
+            if (recalibratingProgress.isShowing()) {
+                if (
+                        HEEL_MODERATE != -1
+                                && LEFT_MODERATE != -1
+                                && RIGHTBRIDGE_MODERATE != -1
+                                && TOE_MODERATE != -1
+                        ) {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            recalibratingProgress.dismiss();
+                        }
+                    });
+                }
+            }
 
         }
 
@@ -598,7 +613,7 @@ public class FeedbackActivity extends Activity {
                                         */
                                             if (!STEP_DOWN && STEP_UP) {
                                                 if (
-                                                        (adcReading > MAX_PRESSURE_VAL - 15)
+                                                        (adcReading > MAX_PRESSURE_VAL - 25)
                                                                 && (adcReading <= MAX_PRESSURE_VAL)
                                                         ) {
                                                     STEP_DOWN = true;
@@ -674,15 +689,6 @@ public class FeedbackActivity extends Activity {
 //                                            }
 
                                             break;
-                                    }
-
-                                    if (
-                                            HEEL_MODERATE != -1
-                                                    && LEFT_MODERATE != -1
-                                                    && RIGHTBRIDGE_MODERATE != -1
-                                                    && TOE_MODERATE != -1
-                                            ) {
-                                        recalibratingProgress.dismiss();
                                     }
 
                                     break;
