@@ -73,8 +73,7 @@ public class FeedbackActivity extends Activity {
             pressureIndex_Toe = 1;
 
     // Loading spinner
-    public ProgressDialog connectingProgress;
-    public ProgressDialog recalibratingProgress;
+    public ProgressDialog connectingProgress, connectFailProgress, recalibratingProgress;
 
     // Init default bluetooth adapter
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -177,6 +176,12 @@ public class FeedbackActivity extends Activity {
         recalibratingProgress.setTitle("Recalibrating");
         recalibratingProgress.setMessage("Let's start over...");
 
+        // Init recalibrate loading spinner
+        connectFailProgress = new ProgressDialog(this);
+        connectFailProgress.setTitle("Failed to Connect");
+        connectFailProgress.setMessage("Long distance relationships are hard to maintain... " +
+                "Please make sure your SoleMate is properly paired before trying again.");
+
         if (MainActivity.DEBUG_TEST_MODE) {
             new ImageFlipperTask().execute();
         } else {
@@ -216,7 +221,7 @@ public class FeedbackActivity extends Activity {
                 // Re-Calibrate moderate values
                 recalibratingProgress.show();
                 try {
-                    Thread.sleep(1200);
+                    Thread.sleep(3000);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -471,8 +476,22 @@ public class FeedbackActivity extends Activity {
         @Override
         protected void onProgressUpdate(Void... unusedVoid) {
             connectingProgress.dismiss();
-            new ImageFlipperTask().execute();
 
+            if (SOCKET_CONNECTED) {
+                new ImageFlipperTask().execute();
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectFailProgress.show();
+                    }
+                });
+                try {
+                    Thread.sleep(1300);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }
         }
 
         @Override
@@ -485,6 +504,9 @@ public class FeedbackActivity extends Activity {
                 mConnectedThread.start();
             } else {
                 Log.i("BT_TEST: FAIL", "Failed to connect to HC-05 Bluetooth socket");
+
+                connectFailProgress.dismiss();
+
                 finish();
             }
         }
@@ -718,6 +740,7 @@ public class FeedbackActivity extends Activity {
                     ioe.printStackTrace();
                     Log.i("BT_TEST: FATAL ERROR", "Failed to read data. Closing btSocket...");
                     try {
+                        SOCKET_INSTREAM_ACTIVE = false; SOCKET_CONNECTED = false;
                         btSocket.close();
                     } catch (IOException ioe2) {
                         ioe2.printStackTrace();

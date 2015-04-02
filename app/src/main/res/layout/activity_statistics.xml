@@ -48,15 +48,15 @@
         android:text=" "
         android:id="@+id/stepsFrequency"
         android:layout_alignTop="@+id/stepsFrequencyLabel"
-        android:layout_alignLeft="@+id/stepsTaken"
-        android:layout_alignStart="@+id/stepsTaken" />
+        android:layout_toRightOf="@+id/stepsFrequencyLabel"
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="spm"
-        android:id="@+id/textView2"
+        android:id="@+id/spmLabel"
         android:layout_alignBottom="@+id/stepsFrequency"
         android:layout_toRightOf="@+id/stepsFrequency"
         android:layout_marginLeft="10dp" />
