@@ -85,10 +85,15 @@ public class StatisticsActivity extends Activity {
                         stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
                         stepFrequencyText.setText(String.valueOf(round(FeedbackActivity.stepFreq, 3)));
 
-                        heelValText.setText(String.valueOf(FeedbackActivity.heelVal));
-                        leftValText.setText(String.valueOf(FeedbackActivity.leftVal));
-                        rightValText.setText(String.valueOf(FeedbackActivity.rightVal));
-                        toeValText.setText(String.valueOf(FeedbackActivity.toeVal));
+                        float heelPressure = FeedbackActivity.heelVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
+                        float leftPressure = FeedbackActivity.leftVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
+                        float rightPressure = FeedbackActivity.rightVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
+                        float toePressure = FeedbackActivity.toeVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
+
+                        heelValText.setText(String.valueOf(round(heelPressure, 1)) + " %");
+                        leftValText.setText(String.valueOf(round(leftPressure, 1)) + " %");
+                        rightValText.setText(String.valueOf(round(rightPressure, 1)) + " %");
+                        toeValText.setText(String.valueOf(round(toePressure, 1)) + " %");
                     }
                 });
 

@@ -8,8 +8,8 @@
     <string name="action_statistics">Statistics</string>
     <string name="action_recalibrate">Re-Calibrate</string>
     <string name="reset_step_count">Reset Step Count</string>
-    <string name="title_activity_feedback">FeedbackActivity</string>
-    <string name="title_activity_statistics">StatisticsActivity</string>
+    <string name="title_activity_feedback">SoleMate</string>
+    <string name="title_activity_statistics">Activity Log</string>
 
 
 

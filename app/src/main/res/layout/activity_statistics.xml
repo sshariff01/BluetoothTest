@@ -30,7 +30,8 @@
         android:text=" "
         android:id="@+id/stepsTaken"
         android:layout_above="@+id/stepsFrequency"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/stepsFrequency"
+        android:layout_alignStart="@+id/stepsFrequency" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -76,7 +77,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Left Pressure:"
+        android:text="Right (Lateral) Pressure:"
         android:id="@+id/leftPressure"
         android:layout_below="@+id/heelPressure"
         android:layout_alignParentLeft="true"
@@ -86,7 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Right Pressure:"
+        android:text="Left (Medial) Pressure:"
         android:id="@+id/rightPressure"
         android:layout_below="@+id/leftPressure"
         android:layout_alignParentLeft="true"
@@ -108,9 +109,10 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="heelVal"
         android:id="@+id/heelVal"
-        android:layout_above="@+id/leftPressure"
-        android:layout_alignLeft="@+id/stepsTaken"
-        android:layout_alignStart="@+id/stepsTaken" />
+        android:layout_alignTop="@+id/heelPressure"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="false"
+        android:layout_marginRight="30dp" />
 
     <TextView
         android:layout_width="wrap_content"
