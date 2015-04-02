@@ -587,29 +587,7 @@ public class FeedbackActivity extends Activity {
                                                 writeToSD("RIGHT: " + adcReading + "\n");
                                             }
 
-                                            /*
-                                            * STEP COUNTER ALGORITHM
-                                            */
-                                            if (!STEP_DOWN && STEP_UP) {
-                                                if (
-                                                        (adcReading > MAX_PRESSURE_VAL - 25)
-                                                                && (adcReading <= MAX_PRESSURE_VAL)
-                                                        ) {
-                                                    STEP_DOWN = true;
-                                                    STEP_UP = false;
-                                                    numSteps++;
-                                                    stepCount.setText(String.valueOf(numSteps));
-                                                    Log.i("BT_TEST", "Number of Steps Taken: " + numSteps);
-                                                }
-                                            } else {
-                                                STEP_DOWN = false;
-                                            }
-                                            if (
-                                                    (adcReading >= 0)
-                                                            && (adcReading < 15)
-                                                    ) {
-                                                STEP_UP = true;
-                                            }
+                                            stepDetect(adcReading);
 
                                             break;
 
@@ -696,6 +674,32 @@ public class FeedbackActivity extends Activity {
     /*
      * HELPER METHODS
      */
+    private void stepDetect(int adcReading) {
+        /*
+        * STEP COUNTER ALGORITHM
+        */
+        if (!STEP_DOWN && STEP_UP) {
+            if (
+                    (adcReading > MAX_PRESSURE_VAL - 25)
+                            && (adcReading <= MAX_PRESSURE_VAL)
+                    ) {
+                STEP_DOWN = true;
+                STEP_UP = false;
+                numSteps++;
+                stepCount.setText(String.valueOf(numSteps));
+                Log.i("BT_TEST", "Number of Steps Taken: " + numSteps);
+            }
+        } else {
+            STEP_DOWN = false;
+        }
+        if (
+                (adcReading >= 0)
+                        && (adcReading < 15)
+                ) {
+            STEP_UP = true;
+        }
+    }
+
     private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state) & MainActivity.WRITE_ENABLE_OPTION) return true;
