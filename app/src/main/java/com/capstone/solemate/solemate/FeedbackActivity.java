@@ -49,7 +49,8 @@ public class FeedbackActivity extends Activity {
     protected static int HEEL_MODERATE = -1,
             LEFT_MODERATE = -1,
             RIGHTBRIDGE_MODERATE = -1,
-            TOE_MODERATE = -1;
+            TOE_MODERATE = -1,
+            SENSITIVTY_DEVIATION = 8;
 
     protected static ImageView imageFootBase;
     protected static ImageView imageToeModerate,
@@ -215,6 +216,9 @@ public class FeedbackActivity extends Activity {
                 // Launch statistics activity
                 Intent myIntent = new Intent(FeedbackActivity.this, StatisticsActivity.class);
                 FeedbackActivity.this.startActivity(myIntent);
+                return true;
+            case R.id.reset_step_count:
+                numSteps = 0;
                 return true;
             case R.id.action_recalibrate:
                 // Re-Calibrate moderate values
@@ -555,9 +559,9 @@ public class FeedbackActivity extends Activity {
                                                 HEEL_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (HEEL_MODERATE + 10)) {
+                                            if (adcReading > (HEEL_MODERATE + SENSITIVTY_DEVIATION/2)) {
                                                 pressureIndex_Heel = 2;
-                                            } else if (adcReading < (HEEL_MODERATE - 10)) {
+                                            } else if (adcReading < (HEEL_MODERATE - SENSITIVTY_DEVIATION/2)) {
                                                 pressureIndex_Heel = 0;
                                             } else {
                                                 pressureIndex_Heel = 1;
@@ -575,9 +579,9 @@ public class FeedbackActivity extends Activity {
                                                 RIGHTBRIDGE_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (RIGHTBRIDGE_MODERATE + 10))
+                                            if (adcReading > (RIGHTBRIDGE_MODERATE + SENSITIVTY_DEVIATION))
                                                 pressureIndex_RightBridge = 2;
-                                            else if (adcReading < (RIGHTBRIDGE_MODERATE - 10))
+                                            else if (adcReading < (RIGHTBRIDGE_MODERATE - SENSITIVTY_DEVIATION))
                                                 pressureIndex_RightBridge = 0;
                                             else pressureIndex_RightBridge = 1;
 
@@ -596,9 +600,9 @@ public class FeedbackActivity extends Activity {
                                                 TOE_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (TOE_MODERATE + 10))
+                                            if (adcReading > (TOE_MODERATE + SENSITIVTY_DEVIATION))
                                                 pressureIndex_Toe = 2;
-                                            else if (adcReading < (TOE_MODERATE - 10))
+                                            else if (adcReading < (TOE_MODERATE - SENSITIVTY_DEVIATION))
                                                 pressureIndex_Toe = 0;
                                             else pressureIndex_Toe = 1;
 
@@ -615,9 +619,9 @@ public class FeedbackActivity extends Activity {
                                                 LEFT_MODERATE = adcReading;
                                             }
 
-                                            if (adcReading > (LEFT_MODERATE + 10))
+                                            if (adcReading > (LEFT_MODERATE + SENSITIVTY_DEVIATION))
                                                 pressureIndex_Left = 2;
-                                            else if (adcReading < (LEFT_MODERATE - 10))
+                                            else if (adcReading < (LEFT_MODERATE - SENSITIVTY_DEVIATION))
                                                 pressureIndex_Left = 0;
                                             else pressureIndex_Left = 1;
 

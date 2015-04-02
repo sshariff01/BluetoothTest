@@ -1,10 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.capstone.solemate.solemate.FeedbackActivity">
+    <item android:id="@+id/action_recalibrate" android:title="@string/action_recalibrate"
+        android:orderInCategory="100" android:showAsAction="ifRoom" />
     <item android:id="@+id/action_about" android:title="@string/action_about"
         android:orderInCategory="100" android:showAsAction="never" />
     <item android:id="@+id/action_statistics" android:title="@string/action_statistics"
         android:orderInCategory="100" android:showAsAction="never" />
-    <item android:id="@+id/action_recalibrate" android:title="@string/action_recalibrate"
-        android:orderInCategory="100" android:showAsAction="ifRoom" />
+    <item android:id="@+id/reset_step_count" android:title="@string/reset_step_count"
+        android:orderInCategory="100" android:showAsAction="never" />
 </menu>
