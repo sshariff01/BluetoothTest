@@ -223,6 +223,9 @@ public class MainActivity extends Activity implements OnClickListener {
 //                    } else if (!mBluetoothAdapter.isEnabled()) {
 //                        Log.i("BT_TEST", "Bluetooth is not enabled!");
                 }
+
+
+                arrayAdapter.add("HC-05\n98:D3:31:40:20:D9");
             }
 
         } else {

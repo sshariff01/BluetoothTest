@@ -3,4 +3,6 @@
     tools:context="com.capstone.solemate.solemate.StatisticsActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/reset_step_count" android:title="@string/reset_step_count"
+        android:orderInCategory="100" android:showAsAction="never" />
 </menu>

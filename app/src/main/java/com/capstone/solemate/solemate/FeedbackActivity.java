@@ -87,13 +87,13 @@ public class FeedbackActivity extends Activity {
 
     public static int heelVal = 0, leftVal = 0, rightVal = 0, toeVal = 0;
 
-    private static long baseTime = System.currentTimeMillis(),
+    public static long baseTime = System.currentTimeMillis(),
             currentTime = System.currentTimeMillis();
-    private static int numStepsInterval, numStepsPeriod = 0;
-    private static final int PERIOD_SIZE = 600;
-    private static int stepsIntervalIndex = 0;
-    private static int[] numStepsIntervalArray = new int[PERIOD_SIZE];
-    private static boolean FIRST_PERIOD;
+    public static int numStepsInterval, numStepsPeriod = 0;
+    public static final int PERIOD_SIZE = 600;
+    public static int stepsIntervalIndex = 0;
+    public static int[] numStepsIntervalArray = new int[PERIOD_SIZE];
+    public static boolean FIRST_PERIOD;
     public static float stepFreq;
 
 
@@ -219,15 +219,21 @@ public class FeedbackActivity extends Activity {
                 return true;
             case R.id.reset_step_count:
                 numSteps = 0;
+                numStepsInterval = 0;
+                stepFreq = 0;
+                numStepsPeriod = 0;
+                stepsIntervalIndex = 0;
+                numStepsIntervalArray = new int[PERIOD_SIZE];
+                baseTime = System.currentTimeMillis();
                 return true;
             case R.id.action_recalibrate:
                 // Re-Calibrate moderate values
                 recalibratingProgress.show();
-
                 HEEL_MODERATE = -1;
                 LEFT_MODERATE = -1;
                 RIGHTBRIDGE_MODERATE = -1;
                 TOE_MODERATE = -1;
+                return true;
 
         }
 

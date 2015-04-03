@@ -60,6 +60,15 @@ public class StatisticsActivity extends Activity {
                 return true;
             case R.id.action_settings:
                 return true;
+            case R.id.reset_step_count:
+                FeedbackActivity.numSteps = 0;
+                FeedbackActivity.numStepsInterval = 0;
+                FeedbackActivity.stepFreq = 0;
+                FeedbackActivity.numStepsPeriod = 0;
+                FeedbackActivity.stepsIntervalIndex = 0;
+                FeedbackActivity.numStepsIntervalArray = new int[FeedbackActivity.PERIOD_SIZE];
+                FeedbackActivity.baseTime = System.currentTimeMillis();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
