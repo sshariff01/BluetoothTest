@@ -75,8 +75,8 @@ public class StatisticsActivity extends Activity {
                 stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
                 stepFrequencyText.setText(String.valueOf(round(FeedbackActivity.stepFreq, 3)));
                 return true;
-            case R.id.action_settings:
-                return true;
+//            case R.id.action_settings:
+//                return true;
         }
 
         return super.onOptionsItemSelected(item);
