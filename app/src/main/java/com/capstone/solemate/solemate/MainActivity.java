@@ -31,7 +31,7 @@ import java.util.List;
 
 public class MainActivity extends Activity implements OnClickListener {
     // Set to false when going in production!
-    public static boolean DEBUG_TEST_MODE = true;
+    public static boolean DEBUG_TEST_MODE = false;
     public static boolean WRITE_ENABLE_OPTION = false;
 
     private final static int REQUEST_ENABLE_BT = 1;

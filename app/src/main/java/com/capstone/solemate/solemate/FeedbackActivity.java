@@ -217,6 +217,11 @@ public class FeedbackActivity extends Activity {
                 Intent myIntent = new Intent(FeedbackActivity.this, StatisticsActivity.class);
                 FeedbackActivity.this.startActivity(myIntent);
                 return true;
+            case R.id.view_trends:
+                // Launch trends activity
+                Intent myIntent1 = new Intent(FeedbackActivity.this, TrendsActivity.class);
+                FeedbackActivity.this.startActivity(myIntent1);
+                return true;
             case R.id.reset_step_count:
                 numSteps = 0;
                 numStepsInterval = 0;
