@@ -59,7 +59,16 @@
         android:layout_marginLeft="10dp" />
 
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Weight Distribution:"
+        android:id="@+id/wtDistributionLabel"
+        android:layout_below="@+id/stepsFrequencyLabel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -67,7 +76,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Heel Pressure:"
         android:id="@+id/heelPressure"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/wtDistributionLabel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -75,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Right (Lateral) Pressure:"
+        android:text="Outer (Lateral) Pressure:"
         android:id="@+id/leftPressure"
         android:layout_below="@+id/heelPressure"
         android:layout_alignParentLeft="true"
@@ -85,7 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Left (Medial) Pressure:"
+        android:text="Inner (Medial) Pressure:"
         android:id="@+id/rightPressure"
         android:layout_below="@+id/leftPressure"
         android:layout_alignParentLeft="true"
@@ -108,9 +117,10 @@
         android:text="heelVal"
         android:id="@+id/heelVal"
         android:layout_alignTop="@+id/heelPressure"
+        android:layout_toRightOf="@+id/wtDistributionLabel"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="false"
-        android:layout_marginRight="30dp" />
+        android:layout_marginLeft="30dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -141,5 +151,7 @@
         android:layout_below="@+id/rightVal"
         android:layout_alignLeft="@+id/rightVal"
         android:layout_alignStart="@+id/rightVal" />
+
+
 
 </RelativeLayout>
