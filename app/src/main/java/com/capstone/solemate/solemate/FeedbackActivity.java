@@ -225,6 +225,7 @@ public class FeedbackActivity extends Activity {
                 stepsIntervalIndex = 0;
                 numStepsIntervalArray = new int[PERIOD_SIZE];
                 baseTime = System.currentTimeMillis();
+                stepCount.setText(String.valueOf(numSteps));
                 return true;
             case R.id.action_recalibrate:
                 // Re-Calibrate moderate values
