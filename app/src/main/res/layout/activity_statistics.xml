@@ -58,6 +58,9 @@
         android:layout_toRightOf="@+id/stepsFrequency"
         android:layout_marginLeft="10dp" />
 
+
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -138,6 +141,5 @@
         android:layout_below="@+id/rightVal"
         android:layout_alignLeft="@+id/rightVal"
         android:layout_alignStart="@+id/rightVal" />
-
 
 </RelativeLayout>

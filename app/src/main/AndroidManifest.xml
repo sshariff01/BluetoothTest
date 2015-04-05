@@ -45,10 +45,15 @@
             android:name=".StatisticsActivity"
             android:label="@string/title_activity_statistics"
             android:parentActivityName=".FeedbackActivity" >
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".FeedbackActivity" />
+        </activity>
+        <activity
+            android:name=".TrendsActivity"
+            android:label="@string/title_activity_trends" >
         </activity>
     </application>
 

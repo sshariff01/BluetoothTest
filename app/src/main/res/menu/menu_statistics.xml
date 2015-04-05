@@ -1,8 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.capstone.solemate.solemate.StatisticsActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+    <item android:id="@+id/view_trends" android:title="@string/action_view_trends"
         android:orderInCategory="100" android:showAsAction="never" />
-    <item android:id="@+id/reset_step_count" android:title="@string/reset_step_count"
+    <item android:id="@+id/reset_step_count" android:title="@string/action_reset_step_count"
+        android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
 </menu>

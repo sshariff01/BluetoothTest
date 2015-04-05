@@ -7,6 +7,6 @@
         android:orderInCategory="100" android:showAsAction="never" />
     <item android:id="@+id/action_statistics" android:title="@string/action_statistics"
         android:orderInCategory="100" android:showAsAction="never" />
-    <item android:id="@+id/reset_step_count" android:title="@string/reset_step_count"
+    <item android:id="@+id/reset_step_count" android:title="@string/action_reset_step_count"
         android:orderInCategory="100" android:showAsAction="never" />
 </menu>

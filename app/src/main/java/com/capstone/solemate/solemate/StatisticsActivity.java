@@ -1,6 +1,7 @@
 package com.capstone.solemate.solemate;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -58,7 +59,10 @@ public class StatisticsActivity extends Activity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_settings:
+            case R.id.view_trends:
+                // Launch trends activity
+                Intent myIntent = new Intent(StatisticsActivity.this, TrendsActivity.class);
+                StatisticsActivity.this.startActivity(myIntent);
                 return true;
             case R.id.reset_step_count:
                 FeedbackActivity.numSteps = 0;
@@ -68,6 +72,10 @@ public class StatisticsActivity extends Activity {
                 FeedbackActivity.stepsIntervalIndex = 0;
                 FeedbackActivity.numStepsIntervalArray = new int[FeedbackActivity.PERIOD_SIZE];
                 FeedbackActivity.baseTime = System.currentTimeMillis();
+                stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
+                stepFrequencyText.setText(String.valueOf(round(FeedbackActivity.stepFreq, 3)));
+                return true;
+            case R.id.action_settings:
                 return true;
         }
 
@@ -94,15 +102,32 @@ public class StatisticsActivity extends Activity {
                         stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
                         stepFrequencyText.setText(String.valueOf(round(FeedbackActivity.stepFreq, 3)));
 
-                        float heelPressure = FeedbackActivity.heelVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
-                        float leftPressure = FeedbackActivity.leftVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
-                        float rightPressure = FeedbackActivity.rightVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
-                        float toePressure = FeedbackActivity.toeVal / (float) FeedbackActivity.MAX_PRESSURE_VAL;
+                        float totalPressure = FeedbackActivity.heelVal
+                                + FeedbackActivity.leftVal
+                                + FeedbackActivity.rightVal
+                                + FeedbackActivity.toeVal;
+                        float heelPressure = 0;
+                        float leftPressure = 0;
+                        float rightPressure = 0;
+                        float toePressure = 0;
+
+                        if (totalPressure > 0) {
+                            heelPressure = (FeedbackActivity.heelVal / totalPressure) * 100;
+                            leftPressure = (FeedbackActivity.leftVal / totalPressure) * 100;
+                            rightPressure = (FeedbackActivity.rightVal / totalPressure) * 100;
+                            toePressure = (FeedbackActivity.toeVal / totalPressure) * 100;
+                        }
 
                         heelValText.setText(String.valueOf(round(heelPressure, 1)) + " %");
                         leftValText.setText(String.valueOf(round(leftPressure, 1)) + " %");
                         rightValText.setText(String.valueOf(round(rightPressure, 1)) + " %");
                         toeValText.setText(String.valueOf(round(toePressure, 1)) + " %");
+
+//                        heelValText.setText(String.valueOf(round(FeedbackActivity.heelVal, 2)));
+//                        leftValText.setText(String.valueOf(round(FeedbackActivity.leftVal, 2)));
+//                        rightValText.setText(String.valueOf(round(FeedbackActivity.rightVal, 2)));
+//                        toeValText.setText(String.valueOf(round(FeedbackActivity.toeVal, 2)));
+
                     }
                 });
 
