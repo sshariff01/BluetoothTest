@@ -83,7 +83,6 @@ public class FeedbackActivity extends Activity {
 
     public static int numSteps;
     public static boolean STEP_UP = true, STEP_DOWN = false;
-    protected static int MAX_PRESSURE_VAL = 64;
 
     public static float heelVal = 0, leftVal = 0, rightVal = 0, toeVal = 0;
     private static float totalPressure = 0;
@@ -757,8 +756,8 @@ public class FeedbackActivity extends Activity {
         */
         if (!STEP_DOWN && STEP_UP) {
             if (
-                    (adcReading > MAX_PRESSURE_VAL - 25)
-                            && (adcReading <= MAX_PRESSURE_VAL)
+                    (adcReading > RIGHTBRIDGE_MODERATE + SENSITIVTY_DEVIATION*2)
+                            && (adcReading <= RIGHTBRIDGE_MODERATE + SENSITIVTY_DEVIATION*2)
                     ) {
                 STEP_DOWN = true;
                 STEP_UP = false;
