@@ -1,10 +1,12 @@
 package com.capstone.solemate.solemate;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -510,18 +512,13 @@ public class FeedbackActivity extends Activity {
 
             if (SOCKET_CONNECTED) {
                 new ImageFlipperTask().execute();
-            } else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        connectFailProgress.show();
-                    }
-                });
-                try {
-                    Thread.sleep(1300);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
+//            } else {
+//
+//                try {
+//                    Thread.sleep(1300);
+//                } catch (InterruptedException ie) {
+//                    ie.printStackTrace();
+//                }
             }
         }
 
@@ -535,10 +532,27 @@ public class FeedbackActivity extends Activity {
                 mConnectedThread.start();
             } else {
                 Log.i("BT_TEST: FAIL", "Failed to connect to HC-05 Bluetooth socket");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        connectFailProgress.show();
+                        new AlertDialog.Builder(FeedbackActivity.this)
+                                .setTitle("Failed to Connect")
+                                .setMessage("Long distance relationships are hard to maintain... \n\n" +
+                                        "Please make sure your SoleMate is turned on before trying again.")
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // continue with delete
+                                        finish();
+                                    }
+                                })
+                                .show();
+                    }
+                });
 
-                connectFailProgress.dismiss();
+//                connectFailProgress.dismiss();
 
-                finish();
+//                finish();
             }
         }
     }
