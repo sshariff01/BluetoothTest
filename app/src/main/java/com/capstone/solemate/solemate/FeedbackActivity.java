@@ -46,11 +46,11 @@ public class FeedbackActivity extends Activity {
     protected static TextView text;
     protected static TextView stepCount;
 
-    protected static int HEEL_MODERATE = -1,
+    protected static float HEEL_MODERATE = -1,
             LEFT_MODERATE = -1,
             RIGHTBRIDGE_MODERATE = -1,
-            TOE_MODERATE = -1,
-            SENSITIVTY_DEVIATION = 8;
+            TOE_MODERATE = -1;
+    private static final float SENSITIVTY_DEVIATION = 13;
 
     protected static ImageView imageFootBase;
     protected static ImageView imageToeModerate,
@@ -85,7 +85,8 @@ public class FeedbackActivity extends Activity {
     public static boolean STEP_UP = true, STEP_DOWN = false;
     protected static int MAX_PRESSURE_VAL = 64;
 
-    public static int heelVal = 0, leftVal = 0, rightVal = 0, toeVal = 0;
+    public static float heelVal = 0, leftVal = 0, rightVal = 0, toeVal = 0;
+    private static float totalPressure = 0;
 
     public static long baseTime = System.currentTimeMillis(),
             currentTime = System.currentTimeMillis();
@@ -565,20 +566,35 @@ public class FeedbackActivity extends Activity {
                                     int identifier = (readByte[0] & 0xC0) >> 6;
                                     int adcReading = readByte[0] & 0x3F; // 0x3F = 0011 1111
 
+                                    totalPressure = heelVal + leftVal + rightVal + toeVal;
+
                                     switch (identifier) {
                                         case 0:
+
                                             if (HEEL_MODERATE == -1) {
                                                 HEEL_MODERATE = adcReading;
+                                                heelVal = adcReading;
+                                            } else {
+                                                if (totalPressure > 0) {
+                                                    heelVal = adcReading;
+
+                                                    if ((heelVal/totalPressure)*100 > ((HEEL_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION / 2)) {
+                                                        pressureIndex_Heel = 2;
+                                                    } else if ((heelVal/totalPressure)*100 < ((HEEL_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION / 2)) {
+                                                        pressureIndex_Heel = 0;
+                                                    } else {
+                                                        pressureIndex_Heel = 1;
+                                                    }
+                                                } else {
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+                                                    HEEL_MODERATE = -1;
+                                                    LEFT_MODERATE = -1;
+                                                    RIGHTBRIDGE_MODERATE = -1;
+                                                    TOE_MODERATE = -1;
+
+                                                }
                                             }
 
-                                            if (adcReading > (HEEL_MODERATE + SENSITIVTY_DEVIATION/2)) {
-                                                pressureIndex_Heel = 2;
-                                            } else if (adcReading < (HEEL_MODERATE - SENSITIVTY_DEVIATION/2)) {
-                                                pressureIndex_Heel = 0;
-                                            } else {
-                                                pressureIndex_Heel = 1;
-                                            }
-                                            heelVal = adcReading;
 
                                             if (isExternalStorageWritable()) {
                                                 writeToSD("HEEL: " + adcReading + "\n");
@@ -589,15 +605,26 @@ public class FeedbackActivity extends Activity {
                                         case 1:
                                             if (RIGHTBRIDGE_MODERATE == -1) {
                                                 RIGHTBRIDGE_MODERATE = adcReading;
+                                                rightVal = adcReading;
+                                            } else {
+                                                if (totalPressure > 0) {
+                                                    rightVal = adcReading;
+
+                                                    if ((rightVal/totalPressure)*100 > ((RIGHTBRIDGE_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION)) {
+                                                        pressureIndex_RightBridge = 2;
+                                                    } else if ((rightVal/totalPressure)*100 < ((RIGHTBRIDGE_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION)) {
+                                                        pressureIndex_RightBridge = 0;
+                                                    } else {
+                                                        pressureIndex_RightBridge = 1;
+                                                    }
+                                                } else {
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+                                                    HEEL_MODERATE = -1;
+                                                    LEFT_MODERATE = -1;
+                                                    RIGHTBRIDGE_MODERATE = -1;
+                                                    TOE_MODERATE = -1;
+                                                }
                                             }
-
-                                            if (adcReading > (RIGHTBRIDGE_MODERATE + SENSITIVTY_DEVIATION))
-                                                pressureIndex_RightBridge = 2;
-                                            else if (adcReading < (RIGHTBRIDGE_MODERATE - SENSITIVTY_DEVIATION))
-                                                pressureIndex_RightBridge = 0;
-                                            else pressureIndex_RightBridge = 1;
-
-                                            rightVal = adcReading;
 
                                             if (isExternalStorageWritable()) {
                                                 writeToSD("RIGHT: " + adcReading + "\n");
@@ -610,15 +637,26 @@ public class FeedbackActivity extends Activity {
                                         case 2:
                                             if (TOE_MODERATE == -1) {
                                                 TOE_MODERATE = adcReading;
+                                                toeVal = adcReading;
+                                            } else {
+                                                if (totalPressure > 0) {
+                                                    toeVal = adcReading;
+
+                                                    if ((toeVal/totalPressure)*100 > ((TOE_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION)) {
+                                                        pressureIndex_Toe = 2;
+                                                    } else if ((toeVal/totalPressure)*100 < ((TOE_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION)) {
+                                                        pressureIndex_Toe = 0;
+                                                    } else {
+                                                        pressureIndex_Toe = 1;
+                                                    }
+                                                } else {
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+                                                    HEEL_MODERATE = -1;
+                                                    LEFT_MODERATE = -1;
+                                                    RIGHTBRIDGE_MODERATE = -1;
+                                                    TOE_MODERATE = -1;
+                                                }
                                             }
-
-                                            if (adcReading > (TOE_MODERATE + SENSITIVTY_DEVIATION))
-                                                pressureIndex_Toe = 2;
-                                            else if (adcReading < (TOE_MODERATE - SENSITIVTY_DEVIATION))
-                                                pressureIndex_Toe = 0;
-                                            else pressureIndex_Toe = 1;
-
-                                            toeVal = adcReading;
 
                                             if (isExternalStorageWritable()) {
                                                 writeToSD("TOE: " + adcReading + "\n");
@@ -629,15 +667,26 @@ public class FeedbackActivity extends Activity {
                                         case 3:
                                             if (LEFT_MODERATE == -1) {
                                                 LEFT_MODERATE = adcReading;
+                                                leftVal = adcReading;
+                                            } else {
+                                                if (totalPressure > 0) {
+                                                    leftVal = adcReading;
+
+                                                    if ((leftVal/totalPressure)*100 > ((LEFT_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION)) {
+                                                        pressureIndex_Left = 2;
+                                                    } else if ((leftVal/totalPressure)*100 < ((LEFT_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION)) {
+                                                        pressureIndex_Left = 0;
+                                                    } else {
+                                                        pressureIndex_Left = 1;
+                                                    }
+                                                } else {
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+                                                    HEEL_MODERATE = -1;
+                                                    LEFT_MODERATE = -1;
+                                                    RIGHTBRIDGE_MODERATE = -1;
+                                                    TOE_MODERATE = -1;
+                                                }
                                             }
-
-                                            if (adcReading > (LEFT_MODERATE + SENSITIVTY_DEVIATION))
-                                                pressureIndex_Left = 2;
-                                            else if (adcReading < (LEFT_MODERATE - SENSITIVTY_DEVIATION))
-                                                pressureIndex_Left = 0;
-                                            else pressureIndex_Left = 1;
-
-                                            leftVal = adcReading;
 
                                             if (isExternalStorageWritable()) {
                                                 writeToSD("LEFT: " + adcReading + "\n");
@@ -671,7 +720,19 @@ public class FeedbackActivity extends Activity {
             while (SOCKET_INSTREAM_ACTIVE & SOCKET_CONNECTED) {
                 try {
                     bytes = inStream.read(buffer);
+                    if (
+                            HEEL_MODERATE != -1
+                                    && LEFT_MODERATE != -1
+                                    && RIGHTBRIDGE_MODERATE != -1
+                                    && TOE_MODERATE != -1
+                            ) {
+                        totalPressure = heelVal + leftVal + rightVal + toeVal;
+                    } else {
+                        totalPressure = 0;
+                    }
                     mHandler.obtainMessage(RECEIVE_MESSAGE, bytes, -1, buffer).sendToTarget();
+
+
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                     Log.i("BT_TEST: FATAL ERROR", "Failed to read data. Closing btSocket...");
