@@ -41,7 +41,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private static ArrayAdapter arrayAdapter;
 
     // BT device connection attributes
-    private static String hc05MacId = new String();
+    private static final String hc05MacId = "98:D3:31:40:20:D9";
     private static Point size = new Point();
     private static Display display;
 
@@ -156,7 +156,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
                 // MAC ID for HC-05 module: 98:D3:31:40:20:D9
 //                hc05MacId = selectedItemStr.substring(selectedItemStr.indexOf("\n") + "\n".length());
-                hc05MacId = "98:D3:31:40:20:D9";
+//                hc05MacId = "98:D3:31:40:20:D9";
 
                 if (mBluetoothAdapter == null) {
                     Log.i("BT_TEST: FATAL ERROR", "Bluetooth adapter is null!");
@@ -210,11 +210,15 @@ public class MainActivity extends Activity implements OnClickListener {
                 /*
                  * Begin AsyncTask to start discovery
                  */
-                    if (arrayAdapter.isEmpty()) {
-                        new DiscoveryTask().execute();
-                    } else {
-                        listPopupWindow.show();
-                    }
+                // Launch new activity to connect to bluetooth and provide real-time user feedback
+                Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
+                myIntent.putExtra("hc05MacId", hc05MacId);
+                MainActivity.this.startActivity(myIntent);
+//                    if (arrayAdapter.isEmpty()) {
+//                        new DiscoveryTask().execute();
+//                    } else {
+//                        listPopupWindow.show();
+//                    }
 
                 } else if (mBluetoothAdapter.isDiscovering()) {
                     listPopupWindow.show();
@@ -300,7 +304,11 @@ public class MainActivity extends Activity implements OnClickListener {
             super.onPostExecute(unusedVoid);
 
             if (START_DISCOVERY && !mBluetoothAdapter.isDiscovering()) {
-                new DiscoveryTask().execute();
+//                new DiscoveryTask().execute();
+                // Launch new activity to connect to bluetooth and provide real-time user feedback
+                Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
+                myIntent.putExtra("hc05MacId", hc05MacId);
+                MainActivity.this.startActivity(myIntent);
             }
 
         }

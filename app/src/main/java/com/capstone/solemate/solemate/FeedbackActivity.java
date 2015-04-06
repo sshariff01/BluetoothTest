@@ -758,8 +758,26 @@ public class FeedbackActivity extends Activity {
                     }
                 }
             }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new AlertDialog.Builder(FeedbackActivity.this)
+                            .setTitle("Lost Connection")
+                            .setMessage("Long distance relationships are hard to maintain... \n\n" +
+                                    "Please make sure your SoleMate is turned on before reconnecting.")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                    finish();
+                                }
+                            })
+                            .show();
+                }
+            });
+
+            }
         }
-    }
 
     /*
      * HELPER METHODS
