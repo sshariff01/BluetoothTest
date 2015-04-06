@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -175,8 +176,7 @@ public class FeedbackActivity extends Activity {
 
         // Init recalibrate loading spinner
         recalibratingProgress = new ProgressDialog(this);
-        recalibratingProgress.setTitle("Recalibrating");
-        recalibratingProgress.setMessage("Let's start over...");
+
 
         // Init recalibrate loading spinner
         connectFailProgress = new ProgressDialog(this);
@@ -195,6 +195,24 @@ public class FeedbackActivity extends Activity {
 
         stepFreq = 0;
 
+        // Re-Calibrate moderate values
+        new AlertDialog.Builder(FeedbackActivity.this)
+                .setTitle("Calibration Instructions")
+                .setMessage("Make sure you're standing relaxed in upright position. Straighten your back and look forward.\n\n" +
+                        "Press \"OK\" when you're ready!")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        recalibratingProgress.setTitle("Let's Start Things Right");
+                        recalibratingProgress.setMessage("Learning more about how you feel...");
+                        recalibratingProgress.show();
+                        HEEL_MODERATE = -1;
+                        LEFT_MODERATE = -1;
+                        RIGHTBRIDGE_MODERATE = -1;
+                        TOE_MODERATE = -1;
+                    }
+                })
+                .show();
+
     }
 
     @Override
@@ -211,6 +229,23 @@ public class FeedbackActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()) {
             case R.id.action_about:
+                new AlertDialog.Builder(FeedbackActivity.this)
+                        .setTitle("Getting To Know You")
+                        .setMessage(
+                                Html.fromHtml(
+                                    "Your SoleMate monitors the distribution of weight across your foot. " +
+                                    "This screen shows the amount of weight you exert at certain pressure points.<br /><br />" +
+                                    "<font color='#FF0000' size='7'>Red</font> means too much pressure (lighten up!)<br />" +
+                                    "<font color='#0000FF' size='7'>Blue</font> means not enough pressure (put some back into it!)<br />" +
+                                    "<font color='#00FF00' size='7'>Green</font> means just right.<br />"
+                                )
+                        )
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .show();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -236,11 +271,28 @@ public class FeedbackActivity extends Activity {
                 return true;
             case R.id.action_recalibrate:
                 // Re-Calibrate moderate values
-                recalibratingProgress.show();
-                HEEL_MODERATE = -1;
-                LEFT_MODERATE = -1;
-                RIGHTBRIDGE_MODERATE = -1;
-                TOE_MODERATE = -1;
+                new AlertDialog.Builder(FeedbackActivity.this)
+                        .setTitle("Recalibration Instructions")
+                        .setMessage("Make sure you're standing relaxed in upright position. Straighten your back and look forward.\n\n" +
+                            "Press \"OK\" when you're ready!")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                recalibratingProgress.setTitle("It's Not You, It's Me :(");
+                                recalibratingProgress.setMessage("Let's start over...");
+                                recalibratingProgress.show();
+                                HEEL_MODERATE = -1;
+                                LEFT_MODERATE = -1;
+                                RIGHTBRIDGE_MODERATE = -1;
+                                TOE_MODERATE = -1;
+                            }
+                        })
+                        .show();
+//                recalibratingProgress.show();
+//                HEEL_MODERATE = -1;
+//                LEFT_MODERATE = -1;
+//                RIGHTBRIDGE_MODERATE = -1;
+//                TOE_MODERATE = -1;
                 return true;
 
         }
@@ -599,7 +651,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_Heel = 1;
                                                     }
                                                 } else {
-                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                     HEEL_MODERATE = -1;
                                                     LEFT_MODERATE = -1;
                                                     RIGHTBRIDGE_MODERATE = -1;
@@ -631,7 +683,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_RightBridge = 1;
                                                     }
                                                 } else {
-                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                     HEEL_MODERATE = -1;
                                                     LEFT_MODERATE = -1;
                                                     RIGHTBRIDGE_MODERATE = -1;
@@ -663,7 +715,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_Toe = 1;
                                                     }
                                                 } else {
-                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                     HEEL_MODERATE = -1;
                                                     LEFT_MODERATE = -1;
                                                     RIGHTBRIDGE_MODERATE = -1;
@@ -693,7 +745,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_Left = 1;
                                                     }
                                                 } else {
-                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
+//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                     HEEL_MODERATE = -1;
                                                     LEFT_MODERATE = -1;
                                                     RIGHTBRIDGE_MODERATE = -1;
