@@ -1,6 +1,8 @@
 package com.capstone.solemate.solemate;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -122,6 +124,22 @@ public class StatisticsActivity extends Activity {
                         leftValText.setText(String.valueOf(round(leftPressure, 1)) + " %");
                         rightValText.setText(String.valueOf(round(rightPressure, 1)) + " %");
                         toeValText.setText(String.valueOf(round(toePressure, 1)) + " %");
+
+                        if (FeedbackActivity.idleCount == 99) {
+                            FeedbackActivity.idleCount = 0;
+                            if(!(isFinishing())) {
+                                new AlertDialog.Builder(StatisticsActivity.this)
+                                        .setTitle("Let's Go for a Walk")
+                                        .setMessage("You've been stationary for a while. It's important to keep your" +
+                                                "blood circulating to stay healthy.")
+                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                FeedbackActivity.idleCount = 0;
+                                            }
+                                        })
+                                        .show();
+                            }
+                        }
 
 //                        heelValText.setText(String.valueOf(round(FeedbackActivity.heelVal, 2)));
 //                        leftValText.setText(String.valueOf(round(FeedbackActivity.leftVal, 2)));

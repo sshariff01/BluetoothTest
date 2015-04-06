@@ -84,7 +84,7 @@ public class FeedbackActivity extends Activity {
 
     public static int index;
 
-    public static int numSteps;
+    public static int numSteps, prevNumSteps;
     public static boolean STEP_UP = true, STEP_DOWN = false;
 
     public static float heelVal = 0, leftVal = 0, rightVal = 0, toeVal = 0;
@@ -98,6 +98,7 @@ public class FeedbackActivity extends Activity {
     public static int[] numStepsIntervalArray = new int[PERIOD_SIZE];
     public static boolean FIRST_PERIOD;
     public static float stepFreq;
+    public static int idleCount;
 
 
     @Override
@@ -165,7 +166,7 @@ public class FeedbackActivity extends Activity {
          */
         imageFootBase = (ImageView) findViewById(R.id.footBase);
 
-        numSteps = 0;
+        numSteps = 0; prevNumSteps = 0;
         stepCount = (TextView) findViewById(R.id.stepsCountVal);
         stepCount.setText(String.valueOf(numSteps));
 
@@ -233,16 +234,15 @@ public class FeedbackActivity extends Activity {
                         .setTitle("Getting To Know You")
                         .setMessage(
                                 Html.fromHtml(
-                                    "Your SoleMate monitors the distribution of weight across your foot. " +
-                                    "This screen shows the amount of weight you exert at certain pressure points.<br /><br />" +
-                                    "<font color='#FF0000' size='7'>Red</font> means too much pressure (lighten up!)<br />" +
-                                    "<font color='#0000FF' size='7'>Blue</font> means not enough pressure (put some back into it!)<br />" +
-                                    "<font color='#00FF00' size='7'>Green</font> means just right.<br />"
+                                        "Your SoleMate monitors the distribution of weight across your foot. " +
+                                                "This screen shows the amount of weight you exert at certain pressure points.<br /><br />" +
+                                                "<font color='#FF0000' size='7'>Red</font> means too much pressure (lighten up!)<br />" +
+                                                "<font color='#0000FF' size='7'>Blue</font> means not enough pressure (put some back into it!)<br />" +
+                                                "<font color='#00FF00' size='7'>Green</font> means just right.<br />"
                                 )
                         )
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // continue with delete
                             }
                         })
                         .show();
@@ -260,7 +260,7 @@ public class FeedbackActivity extends Activity {
                 FeedbackActivity.this.startActivity(myIntent1);
                 return true;
             case R.id.reset_step_count:
-                numSteps = 0;
+                numSteps = 0; prevNumSteps = 0;
                 numStepsInterval = 0;
                 stepFreq = 0;
                 numStepsPeriod = 0;
@@ -277,7 +277,6 @@ public class FeedbackActivity extends Activity {
                             "Press \"OK\" when you're ready!")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // continue with delete
                                 recalibratingProgress.setTitle("It's Not You, It's Me :(");
                                 recalibratingProgress.setMessage("Let's start over...");
                                 recalibratingProgress.show();
@@ -461,6 +460,12 @@ public class FeedbackActivity extends Activity {
             currentTime = System.currentTimeMillis();
 
             if ((currentTime-baseTime) >= 3000) {
+                if (prevNumSteps == numSteps) {
+                    idleCount++;
+                } else {
+                    idleCount = 0;
+                }
+                prevNumSteps = numSteps;
                 baseTime = currentTime;
                 numStepsPeriod = numStepsPeriod - numStepsIntervalArray[stepsIntervalIndex];
                 numStepsIntervalArray[stepsIntervalIndex] = numSteps - numStepsInterval;
@@ -482,6 +487,28 @@ public class FeedbackActivity extends Activity {
                     }
                 }
             }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (idleCount == 99) {
+                        idleCount = 0;
+                        if(!(isFinishing())) {
+                            new AlertDialog.Builder(FeedbackActivity.this)
+                                    .setTitle("Let's Go for a Walk")
+                                    .setMessage("You've been stationary for a while. It's important to keep your" +
+                                            "blood circulating to stay healthy.")
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            idleCount = 0;
+                                        }
+                                    })
+                                    .show();
+                        }
+
+                    }
+                }
+            });
 
             if (recalibratingProgress.isShowing()) {
                 if (
@@ -594,7 +621,6 @@ public class FeedbackActivity extends Activity {
                                         "Please make sure your SoleMate is turned on before trying again.")
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // continue with delete
                                         finish();
                                     }
                                 })
@@ -820,7 +846,6 @@ public class FeedbackActivity extends Activity {
                                     "Please make sure your SoleMate is turned on before reconnecting.")
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
                                     finish();
                                 }
                             })
