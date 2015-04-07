@@ -36,7 +36,7 @@ public class TrendsActivity extends Activity {
         mSeries1.setColor(Color.BLUE);
         mSeries2 = new LineGraphSeries<DataPoint>();
         mSeries2.setTitle("Toe");
-        mSeries1.setColor(Color.GREEN);
+        mSeries2.setColor(Color.GREEN);
 
         graph = (GraphView) findViewById(R.id.graph);
         graph.setTitle("Pressure Distribution Over Past 15s");
