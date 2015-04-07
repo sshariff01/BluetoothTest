@@ -53,7 +53,7 @@ public class FeedbackActivity extends Activity {
             LEFT_MODERATE = -1,
             RIGHTBRIDGE_MODERATE = -1,
             TOE_MODERATE = -1;
-    private static final float SENSITIVTY_DEVIATION = 13;
+    private static final float SENSITIVITY_FACTOR = 13;
 
     protected static ImageView imageFootBase;
     protected static ImageView imageToeModerate,
@@ -511,14 +511,28 @@ public class FeedbackActivity extends Activity {
             });
 
             if (recalibratingProgress.isShowing()) {
-                if (
-                        HEEL_MODERATE != -1
-                                && LEFT_MODERATE != -1
-                                && RIGHTBRIDGE_MODERATE != -1
-                                && TOE_MODERATE != -1
-                        ) {
+                if (!MainActivity.DEBUG_TEST_MODE) {
+                    if (
+                            HEEL_MODERATE != -1
+                                    && LEFT_MODERATE != -1
+                                    && RIGHTBRIDGE_MODERATE != -1
+                                    && TOE_MODERATE != -1
+                            ) {
+                        try {
+                            Thread.sleep(1500);
+                        } catch (InterruptedException ie) {
+                            ie.printStackTrace();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recalibratingProgress.dismiss();
+                            }
+                        });
+                    }
+                } else {
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(1500);
                     } catch (InterruptedException ie) {
                         ie.printStackTrace();
                     }
@@ -663,26 +677,30 @@ public class FeedbackActivity extends Activity {
                                         case 0:
 
                                             if (HEEL_MODERATE == -1) {
+                                                Log.i("NEW_VALUE:", "Setting heelVal...");
                                                 HEEL_MODERATE = adcReading;
                                                 heelVal = adcReading;
+                                                pressureIndex_Heel = 1;
                                             } else {
+                                                heelVal = adcReading;
                                                 if (totalPressure > 0) {
-                                                    heelVal = adcReading;
-
-                                                    if ((heelVal/totalPressure)*100 > ((HEEL_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION / 2)) {
+                                                    if ((heelVal/totalPressure)*100 > ((HEEL_MODERATE / totalPressure)*100 + SENSITIVITY_FACTOR / 2)) {
                                                         pressureIndex_Heel = 2;
-                                                    } else if ((heelVal/totalPressure)*100 < ((HEEL_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION / 2)) {
+                                                    } else if ((heelVal/totalPressure)*100 < ((HEEL_MODERATE / totalPressure)*100 - SENSITIVITY_FACTOR / 2)) {
                                                         pressureIndex_Heel = 0;
                                                     } else {
                                                         pressureIndex_Heel = 1;
                                                     }
                                                 } else {
 //                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-                                                    HEEL_MODERATE = -1;
-                                                    LEFT_MODERATE = -1;
-                                                    RIGHTBRIDGE_MODERATE = -1;
-                                                    TOE_MODERATE = -1;
-
+//                                                    HEEL_MODERATE = -1;
+//                                                    heelVal = 0;
+//                                                    pressureIndex_Heel = 1;
+//
+//                                                    LEFT_MODERATE = -1;
+//                                                    RIGHTBRIDGE_MODERATE = -1;
+//                                                    TOE_MODERATE = -1;
+//
                                                 }
                                             }
 
@@ -695,25 +713,29 @@ public class FeedbackActivity extends Activity {
 
                                         case 1:
                                             if (RIGHTBRIDGE_MODERATE == -1) {
+                                                Log.i("NEW_VALUE:", "Setting rightBridge...");
                                                 RIGHTBRIDGE_MODERATE = adcReading;
                                                 rightVal = adcReading;
+                                                pressureIndex_RightBridge = 1;
                                             } else {
+                                                rightVal = adcReading;
                                                 if (totalPressure > 0) {
-                                                    rightVal = adcReading;
-
-                                                    if ((rightVal/totalPressure)*100 > ((RIGHTBRIDGE_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION)) {
+                                                    if ((rightVal/totalPressure)*100 > ((RIGHTBRIDGE_MODERATE / totalPressure)*100 + SENSITIVITY_FACTOR)) {
                                                         pressureIndex_RightBridge = 2;
-                                                    } else if ((rightVal/totalPressure)*100 < ((RIGHTBRIDGE_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION)) {
+                                                    } else if ((rightVal/totalPressure)*100 < ((RIGHTBRIDGE_MODERATE / totalPressure)*100 - SENSITIVITY_FACTOR)) {
                                                         pressureIndex_RightBridge = 0;
                                                     } else {
                                                         pressureIndex_RightBridge = 1;
                                                     }
                                                 } else {
 //                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-                                                    HEEL_MODERATE = -1;
-                                                    LEFT_MODERATE = -1;
-                                                    RIGHTBRIDGE_MODERATE = -1;
-                                                    TOE_MODERATE = -1;
+//                                                    HEEL_MODERATE = -1;
+//                                                    LEFT_MODERATE = -1;
+//                                                    RIGHTBRIDGE_MODERATE = -1;
+//                                                    TOE_MODERATE = -1;
+//                                                    rightVal = 0;
+//                                                    pressureIndex_RightBridge = 1;
+//
                                                 }
                                             }
 
@@ -727,25 +749,29 @@ public class FeedbackActivity extends Activity {
 
                                         case 2:
                                             if (TOE_MODERATE == -1) {
+                                                Log.i("NEW_VALUE:", "Setting toeVal...");
                                                 TOE_MODERATE = adcReading;
                                                 toeVal = adcReading;
+                                                pressureIndex_Toe = 1;
                                             } else {
+                                                toeVal = adcReading;
                                                 if (totalPressure > 0) {
-                                                    toeVal = adcReading;
-
-                                                    if ((toeVal/totalPressure)*100 > ((TOE_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION)) {
+                                                    if ((toeVal/totalPressure)*100 > ((TOE_MODERATE / totalPressure)*100 + SENSITIVITY_FACTOR)) {
                                                         pressureIndex_Toe = 2;
-                                                    } else if ((toeVal/totalPressure)*100 < ((TOE_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION)) {
+                                                    } else if ((toeVal/totalPressure)*100 < ((TOE_MODERATE / totalPressure)*100 - SENSITIVITY_FACTOR)) {
                                                         pressureIndex_Toe = 0;
                                                     } else {
                                                         pressureIndex_Toe = 1;
                                                     }
                                                 } else {
 //                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-                                                    HEEL_MODERATE = -1;
-                                                    LEFT_MODERATE = -1;
-                                                    RIGHTBRIDGE_MODERATE = -1;
-                                                    TOE_MODERATE = -1;
+//                                                    HEEL_MODERATE = -1;
+//                                                    LEFT_MODERATE = -1;
+//                                                    RIGHTBRIDGE_MODERATE = -1;
+//                                                    TOE_MODERATE = -1;
+//                                                    toeVal = 0;
+//                                                    pressureIndex_Toe = 1;
+//
                                                 }
                                             }
 
@@ -757,25 +783,29 @@ public class FeedbackActivity extends Activity {
 
                                         case 3:
                                             if (LEFT_MODERATE == -1) {
+                                                Log.i("NEW_VALUE:", "Setting leftVal...");
                                                 LEFT_MODERATE = adcReading;
                                                 leftVal = adcReading;
+                                                pressureIndex_Left = 1;
                                             } else {
+                                                leftVal = adcReading;
                                                 if (totalPressure > 0) {
-                                                    leftVal = adcReading;
-
-                                                    if ((leftVal/totalPressure)*100 > ((LEFT_MODERATE / totalPressure)*100 + SENSITIVTY_DEVIATION)) {
+                                                    if ((leftVal/totalPressure)*100 > ((LEFT_MODERATE / totalPressure)*100 + SENSITIVITY_FACTOR)) {
                                                         pressureIndex_Left = 2;
-                                                    } else if ((leftVal/totalPressure)*100 < ((LEFT_MODERATE / totalPressure)*100 - SENSITIVTY_DEVIATION)) {
+                                                    } else if ((leftVal/totalPressure)*100 < ((LEFT_MODERATE / totalPressure)*100 - SENSITIVITY_FACTOR)) {
                                                         pressureIndex_Left = 0;
                                                     } else {
                                                         pressureIndex_Left = 1;
                                                     }
                                                 } else {
 //                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-                                                    HEEL_MODERATE = -1;
-                                                    LEFT_MODERATE = -1;
-                                                    RIGHTBRIDGE_MODERATE = -1;
-                                                    TOE_MODERATE = -1;
+//                                                    HEEL_MODERATE = -1;
+//                                                    LEFT_MODERATE = -1;
+//                                                    RIGHTBRIDGE_MODERATE = -1;
+//                                                    TOE_MODERATE = -1;
+//                                                    leftVal = 0;
+//                                                    pressureIndex_Left = 1;
+//
                                                 }
                                             }
 
@@ -865,8 +895,7 @@ public class FeedbackActivity extends Activity {
         */
         if (!STEP_DOWN && STEP_UP) {
             if (
-                    (adcReading > RIGHTBRIDGE_MODERATE + SENSITIVTY_DEVIATION*2)
-                            && (adcReading <= RIGHTBRIDGE_MODERATE + SENSITIVTY_DEVIATION*2)
+                    (adcReading > RIGHTBRIDGE_MODERATE + SENSITIVITY_FACTOR)
                     ) {
                 STEP_DOWN = true;
                 STEP_UP = false;
