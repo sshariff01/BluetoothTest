@@ -128,12 +128,11 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     protected void init() {
+        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+
         // Init discovery button
         startDiscoveryButton = (Button) findViewById(R.id.startDiscovery);
         startDiscoveryButton.setOnClickListener(this);
-//        startDiscoveryButton.setBackgroundColor(0xFF211a72);
-
-        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 
         // Init array adapter
         arrayAdapter = new ArrayAdapter(this, R.layout.device_list_item);
@@ -201,19 +200,19 @@ public class MainActivity extends Activity implements OnClickListener {
                 if (mBluetoothAdapter == null) {
                     Log.i("BT_TEST_DEBUG", "Device does not support Bluetooth");
                 } else if (!mBluetoothAdapter.isEnabled()) {
-                /*
-                 * Begin AsyncTask to enable BT
-                 */
+                    /*
+                     * Begin AsyncTask to enable BT
+                     */
                     Log.i("BT_TEST", "Bluetooth is not enabled!");
                     new EnableBtTask().execute();
                 } else if (!mBluetoothAdapter.isDiscovering()) {
-                /*
-                 * Begin AsyncTask to start discovery
-                 */
-                // Launch new activity to connect to bluetooth and provide real-time user feedback
-                Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
-                myIntent.putExtra("hc05MacId", hc05MacId);
-                MainActivity.this.startActivity(myIntent);
+                    /*
+                     * Begin AsyncTask to start discovery
+                     */
+                    // Launch new activity to connect to bluetooth and provide real-time user feedback
+                    Intent myIntent = new Intent(MainActivity.this, FeedbackActivity.class);
+                    myIntent.putExtra("hc05MacId", hc05MacId);
+                    MainActivity.this.startActivity(myIntent);
 //                    if (arrayAdapter.isEmpty()) {
 //                        new DiscoveryTask().execute();
 //                    } else {

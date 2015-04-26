@@ -77,8 +77,6 @@ public class StatisticsActivity extends Activity {
                 stepCountText.setText(String.valueOf(FeedbackActivity.numSteps));
                 stepFrequencyText.setText(String.valueOf(round(FeedbackActivity.stepFreq, 3)));
                 return true;
-//            case R.id.action_settings:
-//                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -125,7 +123,7 @@ public class StatisticsActivity extends Activity {
                         rightValText.setText(String.valueOf(round(rightPressure, 1)) + " %");
                         toeValText.setText(String.valueOf(round(toePressure, 1)) + " %");
 
-                        if (FeedbackActivity.idleCount == 99) {
+                        if (FeedbackActivity.idleCount == 199) {
                             FeedbackActivity.idleCount = 0;
                             if(!(isFinishing())) {
                                 new AlertDialog.Builder(StatisticsActivity.this)
@@ -140,11 +138,6 @@ public class StatisticsActivity extends Activity {
                                         .show();
                             }
                         }
-
-//                        heelValText.setText(String.valueOf(round(FeedbackActivity.heelVal, 2)));
-//                        leftValText.setText(String.valueOf(round(FeedbackActivity.leftVal, 2)));
-//                        rightValText.setText(String.valueOf(round(FeedbackActivity.rightVal, 2)));
-//                        toeValText.setText(String.valueOf(round(FeedbackActivity.toeVal, 2)));
 
                     }
                 });

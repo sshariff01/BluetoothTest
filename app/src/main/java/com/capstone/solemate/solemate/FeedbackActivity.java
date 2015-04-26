@@ -491,12 +491,12 @@ public class FeedbackActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (idleCount == 99) {
+                    if (idleCount == 199) {
                         idleCount = 0;
                         if(!(isFinishing())) {
                             new AlertDialog.Builder(FeedbackActivity.this)
                                     .setTitle("Let's Go for a Walk")
-                                    .setMessage("You've been stationary for a while. It's important to keep your" +
+                                    .setMessage("You've been stationary for a while. It's important to keep your " +
                                             "blood circulating to stay healthy.")
                                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
@@ -605,13 +605,6 @@ public class FeedbackActivity extends Activity {
 
             if (SOCKET_CONNECTED) {
                 new ImageFlipperTask().execute();
-//            } else {
-//
-//                try {
-//                    Thread.sleep(1300);
-//                } catch (InterruptedException ie) {
-//                    ie.printStackTrace();
-//                }
             }
         }
 
@@ -628,7 +621,6 @@ public class FeedbackActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        connectFailProgress.show();
                         new AlertDialog.Builder(FeedbackActivity.this)
                                 .setTitle("Failed to Connect")
                                 .setMessage("Long distance relationships are hard to maintain... \n\n" +
@@ -641,9 +633,6 @@ public class FeedbackActivity extends Activity {
                                 .show();
                     }
                 });
-
-//                connectFailProgress.dismiss();
-
 //                finish();
             }
         }
@@ -652,11 +641,8 @@ public class FeedbackActivity extends Activity {
     private class ConnectedThread extends Thread {
         private final InputStream inStream;
 
-//        private final OutputStream outStream;
-
         public ConnectedThread(BluetoothSocket socket) {
             InputStream tmpIn = null;
-//            OutputStream tmpOut = null;
             try {
                 tmpIn = socket.getInputStream();
 
@@ -692,15 +678,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_Heel = 1;
                                                     }
                                                 } else {
-//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-//                                                    HEEL_MODERATE = -1;
-//                                                    heelVal = 0;
-//                                                    pressureIndex_Heel = 1;
-//
-//                                                    LEFT_MODERATE = -1;
-//                                                    RIGHTBRIDGE_MODERATE = -1;
-//                                                    TOE_MODERATE = -1;
-//
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                 }
                                             }
 
@@ -728,14 +706,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_RightBridge = 1;
                                                     }
                                                 } else {
-//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-//                                                    HEEL_MODERATE = -1;
-//                                                    LEFT_MODERATE = -1;
-//                                                    RIGHTBRIDGE_MODERATE = -1;
-//                                                    TOE_MODERATE = -1;
-//                                                    rightVal = 0;
-//                                                    pressureIndex_RightBridge = 1;
-//
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                 }
                                             }
 
@@ -764,14 +735,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_Toe = 1;
                                                     }
                                                 } else {
-//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-//                                                    HEEL_MODERATE = -1;
-//                                                    LEFT_MODERATE = -1;
-//                                                    RIGHTBRIDGE_MODERATE = -1;
-//                                                    TOE_MODERATE = -1;
-//                                                    toeVal = 0;
-//                                                    pressureIndex_Toe = 1;
-//
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                 }
                                             }
 
@@ -798,14 +762,7 @@ public class FeedbackActivity extends Activity {
                                                         pressureIndex_Left = 1;
                                                     }
                                                 } else {
-//                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
-//                                                    HEEL_MODERATE = -1;
-//                                                    LEFT_MODERATE = -1;
-//                                                    RIGHTBRIDGE_MODERATE = -1;
-//                                                    TOE_MODERATE = -1;
-//                                                    leftVal = 0;
-//                                                    pressureIndex_Left = 1;
-//
+                                                    Log.i("FATAL:", "totalPressure is equal to 0...");
                                                 }
                                             }
 
@@ -823,14 +780,12 @@ public class FeedbackActivity extends Activity {
                         ;
                     }
                 };
-//                tmpOut = socket.getOutputStream();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 Log.i("BT_TEST: FATAL ERROR", "Failed to get input stream from socket");
             }
 
             inStream = tmpIn;
-//            outStream = tmpOut;
         }
 
         public void run() {
@@ -895,7 +850,7 @@ public class FeedbackActivity extends Activity {
         */
         if (!STEP_DOWN && STEP_UP) {
             if (
-                    (adcReading > RIGHTBRIDGE_MODERATE + SENSITIVITY_FACTOR)
+                    (adcReading > RIGHTBRIDGE_MODERATE + SENSITIVITY_FACTOR*1.8)
                     ) {
                 STEP_DOWN = true;
                 STEP_UP = false;
